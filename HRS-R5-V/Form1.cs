@@ -77,7 +77,7 @@ namespace HRS_R5_V
         {
             {"RepeatPeriod" , "ObjectNumMax" , "BoundaryLeft" , "BoundaryRight" , "BoundaryLimit" , "BoundaryBias" , 
              "ThresholdPower" , "ThresholdPowerCloser" , "ThresholdSpeedMS" , "ThresholdHoldingTime" , "PreparationTime" },
-            {"PointCloud","PeopleTracking","FDH","FHS","FDTH","FDXY","FDT","","","","" }
+            {"PointCloud","PeopleTracking","FDH","FDS","FDTH","FDXY","FDT","","","","" }
         };
 
         public int HumanCount = 0;
@@ -590,7 +590,7 @@ namespace HRS_R5_V
                 if (workx == 0) workx = 0.001;
                 double worky = Convert.ToDouble(VitalData[i].YPos);
                 DataPoint dp = new DataPoint(workx, worky);
-                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
+                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
 
                 chart1.Series[RName].Points.Add(dp);
                 chart1.Series[RName].Points[i].MarkerSize = 25;
@@ -772,6 +772,7 @@ namespace HRS_R5_V
                 string stp = "";
                 int count = 0;
                 int cct = 0;
+                int dl = 0;
 
                 // センサー停止中 (設定系など)
                 multiLine = false;
@@ -799,33 +800,42 @@ namespace HRS_R5_V
 
                     }
 
+                    if (tmp.Length > 2)
+                    {
+                        dl = tmp.Length - 1;
+                    }
+                    else
+                    {
+                        dl = 1;
+                    }
+
                     if (stp.IndexOf(ParameterItem[1, 0]) >= 0)
                     {
-                        PtextBox1.Text = tmp[1];
+                        PtextBox1.Text = tmp[dl];
                     }
                     else if (stp.IndexOf(ParameterItem[1, 1]) >= 0)
                     {
-                        PtextBox2.Text = tmp[1];
+                        PtextBox2.Text = tmp[dl];
                     }
                     else if (stp.IndexOf(ParameterItem[1, 2]) >= 0)
                     {
-                        PtextBox3.Text = tmp[1];
+                        PtextBox3.Text = tmp[dl];
                     }
                     else if (stp.IndexOf(ParameterItem[1, 3]) >= 0)
                     {
-                        PtextBox4.Text = tmp[1];
+                        PtextBox4.Text = tmp[dl];
                     }
                     else if (stp.IndexOf(ParameterItem[1, 4]) >= 0)
                     {
-                        PtextBox5.Text = tmp[1];
+                        PtextBox5.Text = tmp[dl];
                     }
                     else if (stp.IndexOf(ParameterItem[1, 5]) >= 0)
                     {
-                        PtextBox6.Text = tmp[1];
+                        PtextBox6.Text = tmp[dl];
                     }
                     else if (stp.IndexOf(ParameterItem[1, 6]) >= 0)
                     {
-                        PtextBox7.Text = tmp[1];
+                        PtextBox7.Text = tmp[dl];
                     }
 
                     if (multiLine == true)
