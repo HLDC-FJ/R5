@@ -590,7 +590,8 @@ namespace HRS_R5_V
                 if (workx == 0) workx = 0.001;
                 double worky = Convert.ToDouble(VitalData[i].YPos);
                 DataPoint dp = new DataPoint(workx, worky);
-                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
+                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
+                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
 
                 chart1.Series[RName].Points.Add(dp);
                 chart1.Series[RName].Points[i].MarkerSize = 25;
