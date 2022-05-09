@@ -1314,6 +1314,15 @@ namespace HRS_R5_V
             this.tabControl1.SelectedIndex = 1;
 
             ConsoleData = "";
+            if (radioButton2.Checked == true)
+            {
+                this.label1.Text = "";
+                this.label1.Visible = true;
+            }
+            else
+            {
+                this.label1.Visible = false;
+            }
         }
 #endregion
 
