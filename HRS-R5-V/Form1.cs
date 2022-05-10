@@ -1636,6 +1636,8 @@ namespace HRS_R5_V
             if (udpClient != null)
             {
                 udpClient.Close();
+                udpClient.Dispose();
+                udpClient = null;
                 return;
             }
 
