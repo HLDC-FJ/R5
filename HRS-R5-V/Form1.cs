@@ -24,6 +24,8 @@ namespace HRS_R5_V
 {
     public partial class Form1 : Form
     {
+        private System.Net.Sockets.UdpClient udpClient = null;
+        
         private delegate void Delegate_write(string data);
         private delegate void Delegate_plot();
         //private delegate void Delegate_write();
@@ -81,6 +83,51 @@ namespace HRS_R5_V
         };
 
         public int HumanCount = 0;
+
+
+        #region UDP Task
+        private void ReceiveCallback(IAsyncResult ar)
+        {
+            System.Net.Sockets.UdpClient udp =
+                (System.Net.Sockets.UdpClient)ar.AsyncState;
+
+            //非同期受信を終了する
+            System.Net.IPEndPoint remoteEP = null;
+            byte[] rcvBytes;
+            try
+            {
+                rcvBytes = udp.EndReceive(ar, ref remoteEP);
+            }
+            catch (System.Net.Sockets.SocketException ex)
+            {
+                Console.WriteLine("受信エラー({0}/{1})",
+                    ex.Message, ex.ErrorCode);
+                return;
+            }
+            catch (ObjectDisposedException ex)
+            {
+                //すでに閉じている時は終了
+                Console.WriteLine("Socketは閉じられています。");
+                return;
+            }
+
+            //データを文字列に変換する
+            string rcvMsg = System.Text.Encoding.UTF8.GetString(rcvBytes);
+            //rcvMsg = rcvMsg.Replace("\n", "\r\n");
+            //BeginInvoke(new Delegate_write(DataTask), new Object[] { rcvMsg });
+            BeginInvoke(new Delegate_write(DataTask_PT), new Object[] { rcvMsg });
+
+            if (SensorFlg == true)
+            {
+                ConsoleData = ConsoleData + rcvMsg;
+                RxDataReceive = true;
+            }
+
+            udp.BeginReceive(ReceiveCallback, udp);
+        }
+        #endregion
+
+
 
 
         #region COMポート検出
@@ -571,9 +618,58 @@ namespace HRS_R5_V
             }
 
         }
-#endregion
+        #endregion
 
 
+        #region Start Init Task
+        private void StartInitTask()
+        {
+            if (VitalData.Count > 0)
+            {
+                VitalData.RemoveRange(0, VitalData.Count);
+            }
+
+            RadarChart();
+
+            textBox1.Clear();
+            this.groupBox1.Enabled = false;
+            this.groupBox2.Enabled = false;
+            this.tabControl1.SelectedIndex = 1;
+
+            SensorFlg = true;
+
+            if (radioButton2.Checked == true)
+            {
+                this.label1.Text = "";
+                this.label1.Visible = true;
+            }
+            else
+            {
+                this.label1.Visible = false;
+            }
+        }
+        #endregion
+
+
+        private bool ParamCheck(string[] Dat , int No)
+        {
+            bool flg = false;
+            double work;
+            try
+            {
+                for (int i = 2; i <= 8; i++)
+                {
+                    work = Convert.ToDouble(Dat[(No * 12) + i]);
+                    flg = true;
+                }
+
+            }
+            catch
+            {
+                flg = false;
+            }
+            return flg;
+        }
 
 
 
@@ -649,217 +745,233 @@ namespace HRS_R5_V
             bool IDcheck = false;
             bool multiLine = false;
 
-            /*
-             * ここから本番処理
-             */
-            if (SensorFlg == true)
+            try
             {
-                //if (work.IndexOf("\n") >= 0)                                    // 改行コードある? (↑で見ているので絶対あるはず)
-                if (work != "")
+                /*
+                 * ここから本番処理
+                 */
+                if (SensorFlg == true)
                 {
-                    string[] dat = work.Split('\n');                            // 改行コードにてデータ分割
-                    DatLen = dat.Length;                                        // データ分割数取得
-
-                    for (int i=0; i<DatLen; i++)
+                    if (work != "")
                     {
-                        if (dat[i].IndexOf("#T") >= 0)
+                        string[] dat = work.Split('\n');                            // 改行コードにてデータ分割
+                        DatLen = dat.Length;                                        // データ分割数取得
+
+                        for (int i = 0; i < DatLen; i++)
                         {
-                            // "T" データ処理
-                            det = dat[i].IndexOf("#T");
-                            work = dat[i].Substring(det);
-                            string[] param = work.Split(',');
-
-                            ct = Convert.ToInt32(param[1]);
-                            HumanCount = ct;
-
-                            if (ct == 0)
+                            if (dat[i].IndexOf("#T") >= 0)
                             {
-                                // 検出数が ゼロ だった場合、データ初期化
-                                VitalData.Clear();
+                                // "T" データ処理
+                                det = dat[i].IndexOf("#T");
+                                work = dat[i].Substring(det);
+                                string[] param = work.Split(',');
+
+                                ct = Convert.ToInt32(param[1]);
+                                HumanCount = ct;
+
+                                if (ct == 0)
+                                {
+                                    // 検出数が ゼロ だった場合、データ初期化
+                                    VitalData.Clear();
+                                }
+                                else
+                                {
+                                    for (int z = 0; z < VitalData.Count; z++)
+                                    {
+                                        VitalData[z].Enable = false;
+                                    }
+
+
+                                    for (int j = 0; j < ct; j++)
+                                    {
+                                        if (VitalData.Count != -1)
+                                        {
+                                            // Vital Dataあり
+                                            IDcheck = false;
+                                            for (int ii = 0; ii < VitalData.Count; ii++)
+                                            {
+                                                if (VitalData[ii].ID == param[(j * 12) + 2])
+                                                {
+                                                    if (true == ParamCheck(param , j))
+                                                    {
+                                                        VitalData[ii].ID = param[(j * 12) + 2];
+                                                        VitalData[ii].XPos = param[(j * 12) + 3];
+                                                        VitalData[ii].YPos = param[(j * 12) + 4];
+                                                        VitalData[ii].ZPos = param[(j * 12) + 5];
+                                                        VitalData[ii].Xvel = param[(j * 12) + 6];
+                                                        VitalData[ii].Yvel = param[(j * 12) + 7];
+                                                        VitalData[ii].Zvel = param[(j * 12) + 8];
+                                                        VitalData[ii].Enable = true;
+                                                        IDcheck = true;
+                                                    }
+                                                }
+                                            }
+
+                                            if (IDcheck == false)
+                                            {
+                                                if (true == ParamCheck(param , j))
+                                                {
+                                                    VitalData.Add(new VitalItem
+                                                    {
+                                                        ID = param[(j * 12) + 2],
+                                                        XPos = param[(j * 12) + 3],
+                                                        YPos = param[(j * 12) + 4],
+                                                        ZPos = param[(j * 12) + 5],
+                                                        Xvel = param[(j * 12) + 6],
+                                                        Yvel = param[(j * 12) + 7],
+                                                        Zvel = param[(j * 12) + 8],
+                                                        Enable = true
+                                                    });
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (true == ParamCheck(param, 0))
+                                            {
+                                                // Vital Data なし
+                                                VitalData.Add(new VitalItem
+                                                {
+                                                    ID = param[2],
+                                                    XPos = param[3],
+                                                    YPos = param[4],
+                                                    ZPos = param[5],
+                                                    Xvel = param[6],
+                                                    Yvel = param[7],
+                                                    Zvel = param[8],
+                                                    Enable = true
+                                                });
+                                            }
+                                        }
+                                    }
+                                    for (int ii = 0; ii < VitalData.Count; ii++)
+                                    {
+                                        if (VitalData[ii].Enable == false)
+                                        {
+                                            VitalData.RemoveAt(ii);
+                                        }
+                                    }
+
+                                    // ID順にSortしておく ※保険
+                                    VitalData.Sort((a, b) => string.Compare(a.ID, b.ID));
+                                }
                             }
                             else
                             {
-                                for (int z=0; z<VitalData.Count; z++)
+                                if (dat[i].IndexOf("#F") >= 0)
                                 {
-                                    VitalData[z].Enable = false;
-                                }
-
-                                for (int j=0; j<ct; j++)
-                                {
-                                    if (VitalData.Count != -1)
+                                    // "F" データ処理
+                                    string[] fall = dat[i].Split(',');
+                                    if (Convert.ToInt32(fall[1]) != 0)
                                     {
-                                        // Vital Dataあり
-                                        IDcheck = false;
-                                        for (int ii = 0; ii < VitalData.Count; ii++)
-                                        {
-                                            if (VitalData[ii].ID == param[(j * 12) + 2])
-                                            {
-                                                VitalData[ii].ID = param[(j * 12) + 2];
-                                                VitalData[ii].XPos = param[(j * 12) + 3];
-                                                VitalData[ii].YPos = param[(j * 12) + 4];
-                                                VitalData[ii].ZPos = param[(j * 12) + 5];
-                                                VitalData[ii].Xvel = param[(j * 12) + 6];
-                                                VitalData[ii].Yvel = param[(j * 12) + 7];
-                                                VitalData[ii].Zvel = param[(j * 12) + 8];
-                                                VitalData[ii].Enable = true;
-                                                IDcheck = true;
-                                            }
-                                        }
+                                        this.pictureBox_fall.Visible = true;    // 転んでいる絵表示
+                                        FallTimer = (10 * 10) * 1;              // 1秒表示 (10ms x10 x10 x1)
+                                    }
 
-                                        if (IDcheck == false)
-                                        {
-                                            VitalData.Add(new VitalItem
-                                            {
-                                                ID = param[(j * 12) + 2],
-                                                XPos = param[(j * 12) + 3],
-                                                YPos = param[(j * 12) + 4],
-                                                ZPos = param[(j * 12) + 5],
-                                                Xvel = param[(j * 12) + 6],
-                                                Yvel = param[(j * 12) + 7],
-                                                Zvel = param[(j * 12) + 8],
-                                                Enable = true
-                                            });
-                                        }
-                                    }
-                                    else
-                                    {
-                                        // Vital Data なし
-                                        VitalData.Add(new VitalItem
-                                        {
-                                            ID = param[2],
-                                            XPos = param[3],
-                                            YPos = param[4],
-                                            ZPos = param[5],
-                                            Xvel = param[6],
-                                            Yvel = param[7],
-                                            Zvel = param[8],
-                                            Enable = true
-                                        });
-                                    }
                                 }
-                                for (int ii = 0; ii < VitalData.Count; ii++)
-                                {
-                                    if (VitalData[ii].Enable == false)
-                                    {
-                                        VitalData.RemoveAt(ii);
-                                    }
-                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    string[] tmp = new string[20];
+                    string[] dd = new string[20];
+                    string stp = "";
+                    int count = 0;
+                    int cct = 0;
+                    int dl = 0;
 
-                                // ID順にSortしておく ※保険
-                                VitalData.Sort((a, b) => string.Compare(a.ID, b.ID));
+                    // センサー停止中 (設定系など)
+                    multiLine = false;
+                    if (work.IndexOf("\n") >= 0)
+                    {
+                        dd = work.Split('\n');
+                        cct = dd.Length;
+                        multiLine = true;
+                    }
+                    else
+                    {
+                        stp = work;
+                    }
+
+                    do
+                    {
+                        if (multiLine == false)
+                        {
+                            tmp = work.Split(' ');
+                        }
+                        else
+                        {
+                            tmp = dd[count].Split(' ');
+                            stp = dd[count];
+
+                        }
+
+                        if (tmp.Length > 2)
+                        {
+                            dl = tmp.Length - 1;
+                        }
+                        else
+                        {
+                            dl = 1;
+                        }
+
+                        if (stp.IndexOf(ParameterItem[1, 0]) >= 0)
+                        {
+                            PtextBox1.Text = tmp[dl];
+                        }
+                        else if (stp.IndexOf(ParameterItem[1, 1]) >= 0)
+                        {
+                            PtextBox2.Text = tmp[dl];
+                        }
+                        else if (stp.IndexOf(ParameterItem[1, 2]) >= 0)
+                        {
+                            PtextBox3.Text = tmp[dl];
+                        }
+                        else if (stp.IndexOf(ParameterItem[1, 3]) >= 0)
+                        {
+                            PtextBox4.Text = tmp[dl];
+                        }
+                        else if (stp.IndexOf(ParameterItem[1, 4]) >= 0)
+                        {
+                            PtextBox5.Text = tmp[dl];
+                        }
+                        else if (stp.IndexOf(ParameterItem[1, 5]) >= 0)
+                        {
+                            PtextBox6.Text = tmp[dl];
+                        }
+                        else if (stp.IndexOf(ParameterItem[1, 6]) >= 0)
+                        {
+                            PtextBox7.Text = tmp[dl];
+                        }
+
+                        if (multiLine == true)
+                        {
+                            count++;
+                            if (count == cct)
+                            {
+                                multiLine = false;
+                                break;
                             }
                         }
                         else
                         {
-                            if (dat[i].IndexOf("#F") >= 0)
-                            {
-                                // "F" データ処理
-                                string[] fall = dat[i].Split(',');
-                                if (Convert.ToInt32(fall[1]) != 0)
-                                {
-                                    this.pictureBox_fall.Visible = true;    // 転んでいる絵表示
-                                    FallTimer = (10 * 10) * 1;              // 1秒表示 (10ms x10 x10 x1)
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                string[] tmp = new string[20];
-                string[] dd = new string[20];
-                string stp = "";
-                int count = 0;
-                int cct = 0;
-                int dl = 0;
-
-                // センサー停止中 (設定系など)
-                multiLine = false;
-                if (work.IndexOf("\n") >= 0)
-                {
-                    dd = work.Split('\n');
-                    cct = dd.Length;
-                    multiLine = true;
-                }
-                else
-                {
-                    stp = work;
-                }
-
-                do
-                {
-                    if (multiLine == false)
-                    {
-                        tmp = work.Split(' ');
-                    }
-                    else
-                    {
-                        tmp = dd[count].Split(' ');
-                        stp = dd[count];
-
-                    }
-
-                    if (tmp.Length > 2)
-                    {
-                        dl = tmp.Length - 1;
-                    }
-                    else
-                    {
-                        dl = 1;
-                    }
-
-                    if (stp.IndexOf(ParameterItem[1, 0]) >= 0)
-                    {
-                        PtextBox1.Text = tmp[dl];
-                    }
-                    else if (stp.IndexOf(ParameterItem[1, 1]) >= 0)
-                    {
-                        PtextBox2.Text = tmp[dl];
-                    }
-                    else if (stp.IndexOf(ParameterItem[1, 2]) >= 0)
-                    {
-                        PtextBox3.Text = tmp[dl];
-                    }
-                    else if (stp.IndexOf(ParameterItem[1, 3]) >= 0)
-                    {
-                        PtextBox4.Text = tmp[dl];
-                    }
-                    else if (stp.IndexOf(ParameterItem[1, 4]) >= 0)
-                    {
-                        PtextBox5.Text = tmp[dl];
-                    }
-                    else if (stp.IndexOf(ParameterItem[1, 5]) >= 0)
-                    {
-                        PtextBox6.Text = tmp[dl];
-                    }
-                    else if (stp.IndexOf(ParameterItem[1, 6]) >= 0)
-                    {
-                        PtextBox7.Text = tmp[dl];
-                    }
-
-                    if (multiLine == true)
-                    {
-                        count++;
-                        if (count == cct)
-                        {
-                            multiLine = false;
                             break;
                         }
-                    }
-                    else
-                    {
-                        break;
-                    }
-                } while (true);
+                    } while (true);
 
+                }
+
+                // Done Done Done
+                if (work.IndexOf("Done") >= 0)
+                {
+                    DoneFlg = true;
+                }
             }
-
-            // Done Done Done
-            if (work.IndexOf("Done") >= 0)
+            catch(Exception ex)
             {
-                DoneFlg = true;
+                VitalData.RemoveAt(VitalData.Count-1);
             }
         }
         #endregion
@@ -1050,14 +1162,10 @@ namespace HRS_R5_V
             if (radioButton1.Checked == true)
             {
                 BeginInvoke(new Delegate_write(DataTask), new Object[] { work });
-                //BeginInvoke(new Delegate_write(DataTask), null);
-                //DataTask();
             }
             else
             {
                 BeginInvoke(new Delegate_write(DataTask_PT), new Object[] { work });
-                //BeginInvoke(new Delegate_write(DataTask_PT), null);
-                //DataTask_PT();
             }
 
             if (SensorFlg == true)
@@ -1301,32 +1409,13 @@ namespace HRS_R5_V
             SerialDataOut("START");
 
             SerialData = "";
-            if (VitalData.Count > 0)
-            {
-                VitalData.RemoveRange(0, VitalData.Count);
-            }
-
-            RadarChart();
-
-            textBox1.Clear();
-            this.groupBox1.Enabled = false;
-            this.groupBox2.Enabled = false;
-            this.tabControl1.SelectedIndex = 1;
-
             ConsoleData = "";
-            if (radioButton2.Checked == true)
-            {
-                this.label1.Text = "";
-                this.label1.Visible = true;
-            }
-            else
-            {
-                this.label1.Visible = false;
-            }
-        }
-#endregion
 
-#region "STOP"ボタン処理
+            StartInitTask();
+        }
+        #endregion
+
+        #region "STOP"ボタン処理
         private void button4_Click(object sender, EventArgs e)
         {
             SensorFlg = false;
@@ -1540,6 +1629,27 @@ namespace HRS_R5_V
             }
 
             RxDataReceive = false;
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            if (udpClient != null)
+            {
+                udpClient.Close();
+                return;
+            }
+
+            radioButton2.Checked = true;
+            StartInitTask();
+
+            //UdpClientを作成し、ポート番号(4001)にバインドする
+            System.Net.IPEndPoint localEP = new System.Net.IPEndPoint(
+                System.Net.IPAddress.Any, int.Parse("4001"));
+
+            udpClient = new System.Net.Sockets.UdpClient(localEP);
+
+            //非同期的なデータ受信を開始する
+            udpClient.BeginReceive(ReceiveCallback, udpClient);
         }
     }
 }
