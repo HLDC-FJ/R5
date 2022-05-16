@@ -664,7 +664,7 @@ namespace HRS_R5_V
                 }
 
             }
-            catch
+            catch(Exception ex)
             {
                 flg = false;
             }
@@ -686,8 +686,8 @@ namespace HRS_R5_V
                 if (workx == 0) workx = 0.001;
                 double worky = Convert.ToDouble(VitalData[i].YPos);
                 DataPoint dp = new DataPoint(workx, worky);
-                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
-                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
+                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
+                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
 
                 chart1.Series[RName].Points.Add(dp);
                 chart1.Series[RName].Points[i].MarkerSize = 25;
@@ -768,6 +768,11 @@ namespace HRS_R5_V
 
                                 ct = Convert.ToInt32(param[1]);
                                 HumanCount = ct;
+
+                                if (param.Length != (HumanCount * 13) + 2)
+                                {
+
+                                }
 
                                 if (ct == 0)
                                 {
@@ -865,7 +870,7 @@ namespace HRS_R5_V
                                     if (Convert.ToInt32(fall[1]) != 0)
                                     {
                                         this.pictureBox_fall.Visible = true;    // 転んでいる絵表示
-                                        FallTimer = (10 * 10) * 1;              // 1秒表示 (10ms x10 x10 x1)
+                                        FallTimer = (10 * 5) * 1;               // 0.5秒表示 (10ms x10 x5 x1)
                                     }
 
                                 }
@@ -1254,6 +1259,7 @@ namespace HRS_R5_V
             {
                 // Y座標
                 chart1.ChartAreas[RName].AxisY.Maximum = 6;
+                chart1.ChartAreas[RName].AxisY.IsReversed = true;           // Y軸 反転表示
 
                 // X座標
                 chart1.ChartAreas[RName].AxisX.Minimum = -4;
@@ -1263,12 +1269,13 @@ namespace HRS_R5_V
             else
             {
                 // Y座標
-                chart1.ChartAreas[RName].AxisY.Maximum = 6;
-                chart1.ChartAreas[RName].AxisY.Minimum = -6;
+                chart1.ChartAreas[RName].AxisY.Maximum = 4;
+                chart1.ChartAreas[RName].AxisY.Minimum = -4;
+                //chart1.ChartAreas[RName].AxisY.IsReversed = true;
 
                 // X座標
-                chart1.ChartAreas[RName].AxisX.Minimum = -6;
-                chart1.ChartAreas[RName].AxisX.Maximum = 6;
+                chart1.ChartAreas[RName].AxisX.Minimum = -4;
+                chart1.ChartAreas[RName].AxisX.Maximum = 4;
                 chart1.ChartAreas[RName].AxisX.IsReversed = true;
             }
 
@@ -1291,7 +1298,7 @@ namespace HRS_R5_V
             chart1.ChartAreas[RName].AxisX.MajorGrid.Enabled = true;
             chart1.ChartAreas[RName].AxisX.MinorGrid.Enabled = false;
 
-            chart1.ChartAreas[RName].AxisY.IsReversed = true;           // Y軸 反転表示
+            //chart1.ChartAreas[RName].AxisY.IsReversed = true;           // Y軸 反転表示
             chart1.Series[RName].IsXValueIndexed = false;
 
 
