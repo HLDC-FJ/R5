@@ -686,12 +686,13 @@ namespace HRS_R5_V
                 if (workx == 0) workx = 0.001;
                 double worky = Convert.ToDouble(VitalData[i].YPos);
                 DataPoint dp = new DataPoint(workx, worky);
-                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
-                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
+                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
+                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
 
                 chart1.Series[RName].Points.Add(dp);
                 chart1.Series[RName].Points[i].MarkerSize = 25;
-                chart1.Series[RName].Points[i].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                chart1.Series[RName].SmartLabelStyle.CalloutLineColor = Color.White;
+                chart1.Series[RName].Points[i].Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
                 switch (i)
                 {
@@ -769,9 +770,9 @@ namespace HRS_R5_V
                                 ct = Convert.ToInt32(param[1]);
                                 HumanCount = ct;
 
-                                if (param.Length != (HumanCount * 13) + 2)
+                                if (param.Length != (HumanCount * 12) + 2)
                                 {
-
+                                    break;
                                 }
 
                                 if (ct == 0)
@@ -1243,7 +1244,7 @@ namespace HRS_R5_V
             chart1.ChartAreas.Add(RName);
 
             chart1.Series[RName].ChartType = SeriesChartType.Point;
-            chart1.Series[RName].MarkerSize = 20;
+            chart1.Series[RName].MarkerSize = 15;
             chart1.Series[RName].MarkerStyle = MarkerStyle.Circle;
 
 
@@ -1257,6 +1258,7 @@ namespace HRS_R5_V
 
             if (radioButton1.Checked == true)
             {
+                chart1.Width = 431;
                 // Y座標
                 chart1.ChartAreas[RName].AxisY.Maximum = 6;
                 chart1.ChartAreas[RName].AxisY.IsReversed = true;           // Y軸 反転表示
@@ -1268,15 +1270,16 @@ namespace HRS_R5_V
             }
             else
             {
+                chart1.Width = 643;
                 // Y座標
-                chart1.ChartAreas[RName].AxisY.Maximum = 4;
-                chart1.ChartAreas[RName].AxisY.Minimum = -4;
+                chart1.ChartAreas[RName].AxisY.Maximum = 5;
+                chart1.ChartAreas[RName].AxisY.Minimum = -5;
                 //chart1.ChartAreas[RName].AxisY.IsReversed = true;
 
                 // X座標
-                chart1.ChartAreas[RName].AxisX.Minimum = -4;
-                chart1.ChartAreas[RName].AxisX.Maximum = 4;
-                chart1.ChartAreas[RName].AxisX.IsReversed = true;
+                chart1.ChartAreas[RName].AxisX.Minimum = -5;
+                chart1.ChartAreas[RName].AxisX.Maximum = 5;
+                //chart1.ChartAreas[RName].AxisX.IsReversed = true;
             }
 
 
@@ -1368,14 +1371,14 @@ namespace HRS_R5_V
 
         // ボタン処理関係
 
-#region COMポート再検索
+    #region COMポート再検索
         private void button2_Click(object sender, EventArgs e)
         {
             SerialPortSerch();
         }
 #endregion
 
-#region COMポート接続/切断 ボタン処理
+    #region COMポート接続/切断 ボタン処理
         private void button1_Click(object sender, EventArgs e)
         {
             if (serialPort1.IsOpen == false)
@@ -1407,7 +1410,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-#region "START"ボタン処理
+    #region "START"ボタン処理
         private void button3_Click(object sender, EventArgs e)
         {
             SensorFlg = true;
@@ -1422,7 +1425,7 @@ namespace HRS_R5_V
         }
         #endregion
 
-        #region "STOP"ボタン処理
+    #region "STOP"ボタン処理
         private void button4_Click(object sender, EventArgs e)
         {
             SensorFlg = false;
@@ -1433,7 +1436,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-#region "RESET"ボタン処理
+    #region "RESET"ボタン処理
         private void button5_Click(object sender, EventArgs e)
         {
             serialPort1.DiscardInBuffer();      // シリアル通信用バッファ初期化
@@ -1447,7 +1450,7 @@ namespace HRS_R5_V
 #endregion
 
 
-#region パラメータ 全読出し
+    #region パラメータ 全読出し
         private void button_AllRead_Click(object sender, EventArgs e)
         {
             for (int i=1; i<12; i++)
@@ -1457,7 +1460,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-#region console log
+    #region console log
         private void button6_Click(object sender, EventArgs e)
         {
             Clipboard.SetDataObject(textBox1.Text, true);
@@ -1469,7 +1472,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-#region パラメータ読出し
+    #region パラメータ読出し
         private void PRead1_Click(object sender, EventArgs e)
         {
             ParameterReadTask(1);
@@ -1526,7 +1529,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-#region パラメータ設定
+    #region パラメータ設定
         private void PSet1_Click(object sender, EventArgs e)
         {
             ParameterSetTask(1);
@@ -1637,6 +1640,8 @@ namespace HRS_R5_V
 
             RxDataReceive = false;
         }
+
+
 
         private void button9_Click(object sender, EventArgs e)
         {

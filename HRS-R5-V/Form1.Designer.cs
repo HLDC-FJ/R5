@@ -34,6 +34,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button9 = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button7 = new System.Windows.Forms.Button();
@@ -124,7 +125,6 @@
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.button9 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -175,6 +175,16 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "設定";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(403, 11);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(75, 23);
+            this.button9.TabIndex = 15;
+            this.button9.Text = "Network";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // checkBox2
             // 
@@ -873,7 +883,7 @@
             this.pictureBox_fall.BackColor = System.Drawing.Color.Black;
             this.pictureBox_fall.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.pictureBox_fall.Image = global::HRS_R5_V.Properties.Resources.shirimochi_man;
-            this.pictureBox_fall.Location = new System.Drawing.Point(105, 116);
+            this.pictureBox_fall.Location = new System.Drawing.Point(209, 118);
             this.pictureBox_fall.Name = "pictureBox_fall";
             this.pictureBox_fall.Size = new System.Drawing.Size(245, 225);
             this.pictureBox_fall.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -1207,16 +1217,6 @@
             this.timer1.Enabled = true;
             this.timer1.Interval = 10;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // button9
-            // 
-            this.button9.Location = new System.Drawing.Point(403, 11);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(75, 23);
-            this.button9.TabIndex = 15;
-            this.button9.Text = "Network";
-            this.button9.UseVisualStyleBackColor = true;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
             // Form1
             // 
