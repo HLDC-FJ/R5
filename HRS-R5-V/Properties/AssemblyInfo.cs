@@ -6,10 +6,10 @@ using System.Runtime.InteropServices;
 // 制御されます。アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更します。
 [assembly: AssemblyTitle("60GHz Radar Sensor Application")]
-[assembly: AssemblyDescription("HRS-R5用 レーダーアプリケーション")]
+[assembly: AssemblyDescription("HRS-R7 & HRS-R8A用 レーダーアプリケーション")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Heartland.Data Inc.")]
-[assembly: AssemblyProduct("HRS-R5-V")]
+[assembly: AssemblyProduct("HRS-R5-V & HRS-R8A-PT")]
 [assembly: AssemblyCopyright("Copyright © Heartland.Data Inc. 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // すべての値を指定するか、次を使用してビルド番号とリビジョン番号を既定に設定できます
 // 既定値にすることができます:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.0.3.0")]
-[assembly: AssemblyFileVersion("0.0.3.0")]
+[assembly: AssemblyVersion("0.0.4.0")]
+[assembly: AssemblyFileVersion("0.0.4.0")]

@@ -657,12 +657,33 @@ namespace HRS_R5_V
             double work;
             try
             {
+                work = Convert.ToDouble(Dat[(No * 12) + 2]);                // ID
+                if ((work > 0) && (work < 99))
+                {
+                    work = Convert.ToDouble(Dat[(No * 12) + 3]);            // x
+                    if ((work > -6) && (work < 6))
+                    {
+                        work = Convert.ToDouble(Dat[(No * 12) + 4]);        // y
+                        if ((work > -6) && (work < 6))
+                        {
+                            work = Convert.ToDouble(Dat[(No * 12) + 5]);    // z
+                            if ((work >= 0) && (work <= 10))
+                            {
+                                flg = true;
+                            }
+                        }
+
+                    }
+
+                }
+
+/*
                 for (int i = 2; i <= 8; i++)
                 {
                     work = Convert.ToDouble(Dat[(No * 12) + i]);
                     flg = true;
                 }
-
+*/
             }
             catch(Exception ex)
             {
@@ -686,8 +707,8 @@ namespace HRS_R5_V
                 if (workx == 0) workx = 0.001;
                 double worky = Convert.ToDouble(VitalData[i].YPos);
                 DataPoint dp = new DataPoint(workx, worky);
-                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
-                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
+                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
+                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
 
                 chart1.Series[RName].Points.Add(dp);
                 chart1.Series[RName].Points[i].MarkerSize = 25;
@@ -800,13 +821,15 @@ namespace HRS_R5_V
                                                 {
                                                     if (true == ParamCheck(param , j))
                                                     {
-                                                        VitalData[ii].ID = param[(j * 12) + 2];
-                                                        VitalData[ii].XPos = param[(j * 12) + 3];
-                                                        VitalData[ii].YPos = param[(j * 12) + 4];
-                                                        VitalData[ii].ZPos = param[(j * 12) + 5];
+                                                        VitalData[ii].ID = param[(j * 12) + 2];         // ID
+                                                        VitalData[ii].XPos = param[(j * 12) + 3];       // X
+                                                        VitalData[ii].YPos = param[(j * 12) + 4];       // Y
+                                                        VitalData[ii].ZPos = param[(j * 12) + 5];       // Z
+/*
                                                         VitalData[ii].Xvel = param[(j * 12) + 6];
                                                         VitalData[ii].Yvel = param[(j * 12) + 7];
                                                         VitalData[ii].Zvel = param[(j * 12) + 8];
+*/
                                                         VitalData[ii].Enable = true;
                                                         IDcheck = true;
                                                     }
@@ -823,9 +846,11 @@ namespace HRS_R5_V
                                                         XPos = param[(j * 12) + 3],
                                                         YPos = param[(j * 12) + 4],
                                                         ZPos = param[(j * 12) + 5],
+/*
                                                         Xvel = param[(j * 12) + 6],
                                                         Yvel = param[(j * 12) + 7],
                                                         Zvel = param[(j * 12) + 8],
+*/
                                                         Enable = true
                                                     });
                                                 }
@@ -842,9 +867,11 @@ namespace HRS_R5_V
                                                     XPos = param[3],
                                                     YPos = param[4],
                                                     ZPos = param[5],
+/*
                                                     Xvel = param[6],
                                                     Yvel = param[7],
                                                     Zvel = param[8],
+ */
                                                     Enable = true
                                                 });
                                             }
@@ -860,6 +887,7 @@ namespace HRS_R5_V
 
                                     // ID順にSortしておく ※保険
                                     VitalData.Sort((a, b) => string.Compare(a.ID, b.ID));
+                                    HumanCount = VitalData.Count;
                                 }
                             }
                             else
@@ -980,14 +1008,14 @@ namespace HRS_R5_V
                 VitalData.RemoveAt(VitalData.Count-1);
             }
         }
-        #endregion
+#endregion
 
 
 
 
 
 
-        #region パラメータ読出し
+#region パラメータ読出し
         private void ParameterReadTask(int No)
         {
             string com = "";
@@ -1048,9 +1076,9 @@ namespace HRS_R5_V
                 SerialDataOut(com);
             }
         }
-        #endregion
+#endregion
 
-        #region パラメータ設定
+#region パラメータ設定
         private void ParameterSetTask(int No)
         {
             string com = "";
@@ -1128,7 +1156,7 @@ namespace HRS_R5_V
 
 
 
-        #region シリアルデータ受信イベント
+#region シリアルデータ受信イベント
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             int det = 0;
@@ -1183,7 +1211,7 @@ namespace HRS_R5_V
 #endregion
 
 
-        #region Item 表示
+#region Item 表示
         private void ItemListSet()
         {
             PtextBox1.Text = "";
@@ -1233,7 +1261,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-        #region ### Chart Init ###
+#region ### Chart Init ###
         private void RadarChart()
         {
             chart1.Series.Clear();              // メンバークリア
@@ -1325,7 +1353,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-        #region Radar Parameter Init
+#region Radar Parameter Init
         private void RadarParameterInit()
         {
             SerialDataOut("stop");
@@ -1371,14 +1399,14 @@ namespace HRS_R5_V
 
         // ボタン処理関係
 
-    #region COMポート再検索
+#region COMポート再検索
         private void button2_Click(object sender, EventArgs e)
         {
             SerialPortSerch();
         }
 #endregion
 
-    #region COMポート接続/切断 ボタン処理
+#region COMポート接続/切断 ボタン処理
         private void button1_Click(object sender, EventArgs e)
         {
             if (serialPort1.IsOpen == false)
@@ -1410,7 +1438,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-    #region "START"ボタン処理
+#region "START"ボタン処理
         private void button3_Click(object sender, EventArgs e)
         {
             SensorFlg = true;
@@ -1418,14 +1446,15 @@ namespace HRS_R5_V
 
             SerialDataOut("START");
 
+            HumanCount = 0;
             SerialData = "";
             ConsoleData = "";
 
             StartInitTask();
         }
-        #endregion
+#endregion
 
-    #region "STOP"ボタン処理
+#region "STOP"ボタン処理
         private void button4_Click(object sender, EventArgs e)
         {
             SensorFlg = false;
@@ -1436,7 +1465,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-    #region "RESET"ボタン処理
+#region "RESET"ボタン処理
         private void button5_Click(object sender, EventArgs e)
         {
             serialPort1.DiscardInBuffer();      // シリアル通信用バッファ初期化
@@ -1450,7 +1479,7 @@ namespace HRS_R5_V
 #endregion
 
 
-    #region パラメータ 全読出し
+#region パラメータ 全読出し
         private void button_AllRead_Click(object sender, EventArgs e)
         {
             for (int i=1; i<12; i++)
@@ -1460,7 +1489,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-    #region console log
+#region console log
         private void button6_Click(object sender, EventArgs e)
         {
             Clipboard.SetDataObject(textBox1.Text, true);
@@ -1472,7 +1501,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-    #region パラメータ読出し
+#region パラメータ読出し
         private void PRead1_Click(object sender, EventArgs e)
         {
             ParameterReadTask(1);
@@ -1529,7 +1558,7 @@ namespace HRS_R5_V
         }
 #endregion
 
-    #region パラメータ設定
+#region パラメータ設定
         private void PSet1_Click(object sender, EventArgs e)
         {
             ParameterSetTask(1);
