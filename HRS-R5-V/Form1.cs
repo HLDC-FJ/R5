@@ -1,31 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-using System.IO;
-using System.Collections;
-
 using System.IO.Ports;
-using System.Net;
-using System.Net.NetworkInformation;
-
-using System.Threading;
-
+using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
-
+using System.Management;
 
 namespace HRS_R5_V
 {
     public partial class Form1 : Form
     {
         private System.Net.Sockets.UdpClient udpClient = null;
-        
+
         private delegate void Delegate_write(string data);
         private delegate void Delegate_plot();
         //private delegate void Delegate_write();
@@ -77,12 +63,19 @@ namespace HRS_R5_V
 
         public string[,] ParameterItem = new string[,]
         {
-            {"RepeatPeriod" , "ObjectNumMax" , "BoundaryLeft" , "BoundaryRight" , "BoundaryLimit" , "BoundaryBias" , 
+            {"RepeatPeriod" , "ObjectNumMax" , "BoundaryLeft" , "BoundaryRight" , "BoundaryLimit" , "BoundaryBias" ,
              "ThresholdPower" , "ThresholdPowerCloser" , "ThresholdSpeedMS" , "ThresholdHoldingTime" , "PreparationTime" },
             {"PointCloud","PeopleTracking","FDH","FDS","FDTH","FDXY","FDT","","","","" }
         };
 
         public int HumanCount = 0;
+
+        private bool LiveFlg = false;
+        private bool LiveER = false;
+        private int LiveTime = 0;
+        private VitalItem VitalOld = new VitalItem();
+
+
 
 
         #region UDP Task
@@ -133,7 +126,8 @@ namespace HRS_R5_V
         #region COMポート検出
         private void SerialPortSerch()
         {
-            string[] portlist = SerialPort.GetPortNames();
+            //string[] portlist = SerialPort.GetPortNames();
+            string[] portlist = GetDeviceNames();
             this.comboBox1.Items.Clear();
             this.comboBox1.Text = "";
             foreach (string PortName in portlist)
@@ -145,6 +139,67 @@ namespace HRS_R5_V
                 comboBox1.SelectedIndex = 0;
             }
         }
+
+
+        public static string[] GetDeviceNames()
+        {
+            var deviceNameList = new System.Collections.ArrayList();
+            var check = new System.Text.RegularExpressions.Regex("(COM[1-9][0-9]?[0-9]?)");
+
+            ManagementClass mcPnPEntity = new ManagementClass("Win32_PnPEntity");
+            ManagementObjectCollection manageObjCol = mcPnPEntity.GetInstances();
+
+            //全てのPnPデバイスを探索しシリアル通信が行われるデバイスを随時追加する
+            foreach (ManagementObject manageObj in manageObjCol)
+            {
+                //Nameプロパティを取得
+                var namePropertyValue = manageObj.GetPropertyValue("Name");
+                if (namePropertyValue == null)
+                {
+                    continue;
+                }
+
+                //Nameプロパティ文字列の一部が"(COM1)～(COM999)"と一致するときリストに追加"
+                string name = namePropertyValue.ToString();
+                if (check.IsMatch(name))
+                {
+                    // InziniousのModuleでは2系統のシリアルが見える。
+                    // Standardの記載があるものだけを取得する
+                    // 直接接続を行う場合は表示されないのでケアする必要あり。
+                    if (SerialPort.GetPortNames().Length > 1)
+                    {
+                        if (name.Contains("Standard") == true)
+                        {
+                            string aaa = name.Substring(name.IndexOf('(')+1, (name.LastIndexOf(')') - name.IndexOf('('))-1);
+                            deviceNameList.Add(aaa);
+                        }
+                    }
+                    else
+                    {
+                        string aaa = name.Substring(name.IndexOf('(') + 1, (name.LastIndexOf(')') - name.IndexOf('(')) - 1);
+                        deviceNameList.Add(aaa);
+                    }
+                }
+            }
+
+            //戻り値作成
+            if (deviceNameList.Count > 0)
+            {
+                string[] deviceNames = new string[deviceNameList.Count];
+                int index = 0;
+                foreach (var name in deviceNameList)
+                {
+                    deviceNames[index++] = name.ToString();
+                }
+                return deviceNames;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+
         #endregion
 
         #region COM Port Open / Close
@@ -351,7 +406,7 @@ namespace HRS_R5_V
 
                 // センサー停止中 (設定系など)
                 multiLine = false;
-                if (work.IndexOf("\n") >=0)
+                if (work.IndexOf("\n") >= 0)
                 {
                     dd = work.Split('\n');
                     cct = dd.Length;
@@ -488,7 +543,7 @@ namespace HRS_R5_V
             // X-Y Plot
             chart1.Series[RName].Points.Clear();            // ポイントプロット初期化
 
-            for (int i=0; i<VitalData.Count; i++)
+            for (int i = 0; i < VitalData.Count; i++)
             {
                 if (Convert.ToInt32(VitalData[i].Status) == 2)
                 {
@@ -515,7 +570,8 @@ namespace HRS_R5_V
                             ID4BR.Text = VitalData[i].BR;
                             break;
                     }
-                } else if (Convert.ToInt32(VitalData[i].Status) == 1)
+                }
+                else if (Convert.ToInt32(VitalData[i].Status) == 1)
                 {
                     switch (i)
                     {
@@ -651,14 +707,15 @@ namespace HRS_R5_V
         #endregion
 
 
-        private bool ParamCheck(string[] Dat , int No)
+        #region パラメータ値チェック処理
+        private bool ParamCheck(string[] Dat, int No)
         {
             bool flg = false;
             double work;
             try
             {
                 work = Convert.ToDouble(Dat[(No * 12) + 2]);                // ID
-                if ((work > 0) && (work < 99))
+                if ((work >= 0) && (work < 99))
                 {
                     work = Convert.ToDouble(Dat[(No * 12) + 3]);            // x
                     if ((work > -6) && (work < 6))
@@ -667,32 +724,66 @@ namespace HRS_R5_V
                         if ((work > -6) && (work < 6))
                         {
                             work = Convert.ToDouble(Dat[(No * 12) + 5]);    // z
-                            if ((work >= 0) && (work <= 10))
+                            if ((work >= -2) && (work <= 10))
                             {
                                 flg = true;
                             }
                         }
 
                     }
-
                 }
-
-/*
-                for (int i = 2; i <= 8; i++)
-                {
-                    work = Convert.ToDouble(Dat[(No * 12) + i]);
-                    flg = true;
-                }
-*/
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 flg = false;
             }
             return flg;
         }
+        #endregion
 
+        private bool LiveCheck(string[] Dat, int No, int sel)
+        {
+            bool flg = false;
 
+            if (LiveFlg == false)
+            {
+                if (VitalData[sel].XPos == Dat[(No * 12) + 3])
+                {
+                    if (VitalData[sel].YPos == Dat[(No * 12) + 4])
+                    {
+                        if (VitalData[sel].ZPos == Dat[(No * 12) + 5])
+                        {
+                            VitalOld.XPos = Dat[(No * 12) + 3];
+                            VitalOld.YPos = Dat[(No * 12) + 4];
+                            VitalOld.ZPos = Dat[(No * 12) + 5];
+                            LiveFlg = true;
+                            LiveER = false;
+                            LiveTime = 0;
+                            flg = true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (VitalOld.XPos == Dat[(No * 12) + 3])
+                {
+                    if (VitalOld.YPos == Dat[(No * 12) + 4])
+                    {
+                        if (VitalOld.ZPos == Dat[(No * 12) + 5])
+                        {
+                            flg = true;
+                        }
+                    }
+                }
+            }
+
+            if (flg == false)
+            {
+                LiveFlg = false;
+            }
+            return (flg);
+        }
 
 
 
@@ -756,7 +847,7 @@ namespace HRS_R5_V
                 }
             }
         }
-#endregion
+        #endregion
 
         #region 人数カウント [HRS-R8A]
         private void DataTask_PT(string work)
@@ -791,6 +882,8 @@ namespace HRS_R5_V
                                 ct = Convert.ToInt32(param[1]);
                                 HumanCount = ct;
 
+                                // データ長確認。　※人数に対してデータ長がおかしい場合は処理を行わない。
+                                // 単に馬鹿避け。
                                 if (param.Length != (HumanCount * 12) + 2)
                                 {
                                     break;
@@ -819,17 +912,12 @@ namespace HRS_R5_V
                                             {
                                                 if (VitalData[ii].ID == param[(j * 12) + 2])
                                                 {
-                                                    if (true == ParamCheck(param , j))
+                                                    if (true == ParamCheck(param, j))
                                                     {
                                                         VitalData[ii].ID = param[(j * 12) + 2];         // ID
                                                         VitalData[ii].XPos = param[(j * 12) + 3];       // X
                                                         VitalData[ii].YPos = param[(j * 12) + 4];       // Y
                                                         VitalData[ii].ZPos = param[(j * 12) + 5];       // Z
-/*
-                                                        VitalData[ii].Xvel = param[(j * 12) + 6];
-                                                        VitalData[ii].Yvel = param[(j * 12) + 7];
-                                                        VitalData[ii].Zvel = param[(j * 12) + 8];
-*/
                                                         VitalData[ii].Enable = true;
                                                         IDcheck = true;
                                                     }
@@ -838,7 +926,7 @@ namespace HRS_R5_V
 
                                             if (IDcheck == false)
                                             {
-                                                if (true == ParamCheck(param , j))
+                                                if (true == ParamCheck(param, j))
                                                 {
                                                     VitalData.Add(new VitalItem
                                                     {
@@ -846,11 +934,6 @@ namespace HRS_R5_V
                                                         XPos = param[(j * 12) + 3],
                                                         YPos = param[(j * 12) + 4],
                                                         ZPos = param[(j * 12) + 5],
-/*
-                                                        Xvel = param[(j * 12) + 6],
-                                                        Yvel = param[(j * 12) + 7],
-                                                        Zvel = param[(j * 12) + 8],
-*/
                                                         Enable = true
                                                     });
                                                 }
@@ -867,11 +950,6 @@ namespace HRS_R5_V
                                                     XPos = param[3],
                                                     YPos = param[4],
                                                     ZPos = param[5],
-/*
-                                                    Xvel = param[6],
-                                                    Yvel = param[7],
-                                                    Zvel = param[8],
- */
                                                     Enable = true
                                                 });
                                             }
@@ -894,14 +972,16 @@ namespace HRS_R5_V
                             {
                                 if (dat[i].IndexOf("#F") >= 0)
                                 {
-                                    // "F" データ処理
-                                    string[] fall = dat[i].Split(',');
-                                    if (Convert.ToInt32(fall[1]) != 0)
+                                    if (checkBox3.Checked == true)
                                     {
-                                        this.pictureBox_fall.Visible = true;    // 転んでいる絵表示
-                                        FallTimer = (10 * 5) * 1;               // 0.5秒表示 (10ms x10 x5 x1)
+                                        // "F" データ処理
+                                        string[] fall = dat[i].Split(',');
+                                        if (Convert.ToInt32(fall[1]) != 0)
+                                        {
+                                            this.pictureBox_fall.Visible = true;    // 転んでいる絵表示
+                                            FallTimer = (10 * 5) * 1;               // 0.5秒表示 (10ms x10 x5 x1)
+                                        }
                                     }
-
                                 }
                             }
                         }
@@ -1003,19 +1083,19 @@ namespace HRS_R5_V
                     DoneFlg = true;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                VitalData.RemoveAt(VitalData.Count-1);
+                VitalData.RemoveAt(VitalData.Count - 1);
             }
         }
-#endregion
+        #endregion
 
 
 
 
 
 
-#region パラメータ読出し
+        #region パラメータ読出し
         private void ParameterReadTask(int No)
         {
             string com = "";
@@ -1076,9 +1156,9 @@ namespace HRS_R5_V
                 SerialDataOut(com);
             }
         }
-#endregion
+        #endregion
 
-#region パラメータ設定
+        #region パラメータ設定
         private void ParameterSetTask(int No)
         {
             string com = "";
@@ -1094,7 +1174,7 @@ namespace HRS_R5_V
                 sel = 1;
             }
 
-                switch (No)
+            switch (No)
             {
                 case 1:
                     com = ParameterItem[sel, 0] + " " + PtextBox1.Text;
@@ -1151,12 +1231,12 @@ namespace HRS_R5_V
                 SerialDataOut(com);
             }
         }
-#endregion
+        #endregion
 
 
 
 
-#region シリアルデータ受信イベント
+        #region シリアルデータ受信イベント
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             int det = 0;
@@ -1208,10 +1288,10 @@ namespace HRS_R5_V
                 RxDataReceive = true;
             }
         }
-#endregion
+        #endregion
 
 
-#region Item 表示
+        #region Item 表示
         private void ItemListSet()
         {
             PtextBox1.Text = "";
@@ -1259,9 +1339,9 @@ namespace HRS_R5_V
 
             }
         }
-#endregion
+        #endregion
 
-#region ### Chart Init ###
+        #region ### Chart Init ###
         private void RadarChart()
         {
             chart1.Series.Clear();              // メンバークリア
@@ -1351,9 +1431,9 @@ namespace HRS_R5_V
 
             chart1.ChartAreas[RName].BackColor = Color.Black;           // 背景色
         }
-#endregion
+        #endregion
 
-#region Radar Parameter Init
+        #region Radar Parameter Init
         private void RadarParameterInit()
         {
             SerialDataOut("stop");
@@ -1372,7 +1452,7 @@ namespace HRS_R5_V
             }
 
         }
-#endregion
+        #endregion
 
 
         public Form1()
@@ -1399,14 +1479,14 @@ namespace HRS_R5_V
 
         // ボタン処理関係
 
-#region COMポート再検索
+        #region COMポート再検索
         private void button2_Click(object sender, EventArgs e)
         {
             SerialPortSerch();
         }
-#endregion
+        #endregion
 
-#region COMポート接続/切断 ボタン処理
+        #region COMポート接続/切断 ボタン処理
         private void button1_Click(object sender, EventArgs e)
         {
             if (serialPort1.IsOpen == false)
@@ -1436,15 +1516,16 @@ namespace HRS_R5_V
                 }
             }
         }
-#endregion
+        #endregion
 
-#region "START"ボタン処理
+        #region "START"ボタン処理
         private void button3_Click(object sender, EventArgs e)
         {
             SensorFlg = true;
             RadarParameterInit();               // Radar 初期値設定
 
-            SerialDataOut("START");
+            //SerialDataOut("START");
+            SerialDataOut("reset");
 
             HumanCount = 0;
             SerialData = "";
@@ -1452,9 +1533,9 @@ namespace HRS_R5_V
 
             StartInitTask();
         }
-#endregion
+        #endregion
 
-#region "STOP"ボタン処理
+        #region "STOP"ボタン処理
         private void button4_Click(object sender, EventArgs e)
         {
             SensorFlg = false;
@@ -1463,9 +1544,9 @@ namespace HRS_R5_V
             this.groupBox1.Enabled = true;
             this.groupBox2.Enabled = true;
         }
-#endregion
+        #endregion
 
-#region "RESET"ボタン処理
+        #region "RESET"ボタン処理
         private void button5_Click(object sender, EventArgs e)
         {
             serialPort1.DiscardInBuffer();      // シリアル通信用バッファ初期化
@@ -1476,20 +1557,20 @@ namespace HRS_R5_V
 
             button4.PerformClick();             // "STOP"ボタン呼出
         }
-#endregion
+        #endregion
 
 
-#region パラメータ 全読出し
+        #region パラメータ 全読出し
         private void button_AllRead_Click(object sender, EventArgs e)
         {
-            for (int i=1; i<12; i++)
+            for (int i = 1; i < 12; i++)
             {
                 ParameterReadTask(i);
             }
         }
-#endregion
+        #endregion
 
-#region console log
+        #region console log
         private void button6_Click(object sender, EventArgs e)
         {
             Clipboard.SetDataObject(textBox1.Text, true);
@@ -1499,9 +1580,9 @@ namespace HRS_R5_V
         {
             textBox1.Clear();
         }
-#endregion
+        #endregion
 
-#region パラメータ読出し
+        #region パラメータ読出し
         private void PRead1_Click(object sender, EventArgs e)
         {
             ParameterReadTask(1);
@@ -1556,9 +1637,9 @@ namespace HRS_R5_V
         {
             ParameterReadTask(11);
         }
-#endregion
+        #endregion
 
-#region パラメータ設定
+        #region パラメータ設定
         private void PSet1_Click(object sender, EventArgs e)
         {
             ParameterSetTask(1);
@@ -1623,7 +1704,7 @@ namespace HRS_R5_V
 
 
 
-#endregion
+        #endregion
 
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -1668,6 +1749,7 @@ namespace HRS_R5_V
             }
 
             RxDataReceive = false;
+
         }
 
 
