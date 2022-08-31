@@ -6,6 +6,11 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Management;
 
+using System.IO;
+using System.Text;
+
+
+
 namespace HRS_R5_V
 {
     public partial class Form1 : Form
@@ -30,6 +35,8 @@ namespace HRS_R5_V
 
         public string TestData = "";
 
+        public string OutputFolder = System.AppDomain.CurrentDomain.BaseDirectory;
+        public string logFileName = "";
 
         public string RName = "RaderMaker";
 
@@ -790,6 +797,8 @@ namespace HRS_R5_V
         #region 人数データ表示
         private void DataPlot_PT()
         {
+            string dat = "";
+
             chart1.Series[RName].Points.Clear();
 
             for (int i = 0; i < VitalData.Count; i++)
@@ -798,8 +807,18 @@ namespace HRS_R5_V
                 if (workx == 0) workx = 0.001;
                 double worky = Convert.ToDouble(VitalData[i].YPos);
                 DataPoint dp = new DataPoint(workx, worky);
-                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
+                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + "\r\nXvel:" + VitalData[i].Xvel + " Yvel:" + VitalData[i].Yvel;
+                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
                 //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
+
+
+                if (enableDisableToolStripMenuItem.Checked == true)
+                {
+                    dat = "";
+                    dat = VitalData[i].ID + "," + VitalData[i].XPos + "," + VitalData[i].YPos + "," + VitalData[i].ZPos + "," + VitalData[i].Xvel + "," + VitalData[i].Yvel;
+                    logWrite(dat);
+                }
+
 
                 chart1.Series[RName].Points.Add(dp);
                 chart1.Series[RName].Points[i].MarkerSize = 25;
@@ -918,6 +937,8 @@ namespace HRS_R5_V
                                                         VitalData[ii].XPos = param[(j * 12) + 3];       // X
                                                         VitalData[ii].YPos = param[(j * 12) + 4];       // Y
                                                         VitalData[ii].ZPos = param[(j * 12) + 5];       // Z
+                                                        VitalData[ii].Xvel = param[(j * 12) + 6];       // Vel X
+                                                        VitalData[ii].Yvel = param[(j * 12) + 7];       // vel Y
                                                         VitalData[ii].Enable = true;
                                                         IDcheck = true;
                                                     }
@@ -934,6 +955,8 @@ namespace HRS_R5_V
                                                         XPos = param[(j * 12) + 3],
                                                         YPos = param[(j * 12) + 4],
                                                         ZPos = param[(j * 12) + 5],
+                                                        Xvel = param[(j * 12) + 6],
+                                                        Yvel = param[(j * 12) + 7],
                                                         Enable = true
                                                     });
                                                 }
@@ -950,6 +973,8 @@ namespace HRS_R5_V
                                                     XPos = param[3],
                                                     YPos = param[4],
                                                     ZPos = param[5],
+                                                    Xvel = param[6],
+                                                    Yvel = param[7],
                                                     Enable = true
                                                 });
                                             }
@@ -1776,5 +1801,68 @@ namespace HRS_R5_V
             //非同期的なデータ受信を開始する
             udpClient.BeginReceive(ReceiveCallback, udpClient);
         }
+
+
+
+
+
+        #region ログ書き出し
+        private void logWrite(string dat)
+        {
+            FileStream FS_log = new FileStream(logFileName, FileMode.Append, FileAccess.Write);
+            StreamWriter SR_log = new StreamWriter(FS_log, Encoding.GetEncoding("UTF-8"));
+
+            SR_log.WriteLine(dat);
+
+            SR_log.Close();
+            FS_log.Close();
+        }
+        #endregion
+
+
+
+
+        #region ログ出力フォルダ設定
+        private void outputFolderSetToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fol = new FolderBrowserDialog();
+            fol.Description = "log出力先フォルダを指定してください";
+            fol.RootFolder = Environment.SpecialFolder.Desktop;
+            if (OutputFolder != "")
+            {
+                fol.SelectedPath = OutputFolder;
+            }
+            fol.ShowNewFolderButton = true;
+
+            if (fol.ShowDialog(this) == DialogResult.OK)
+            {
+                OutputFolder = fol.SelectedPath;
+            }
+        }
+        #endregion
+
+
+        #region ログ出力 有効/無効
+        private void enableDisableToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (enableDisableToolStripMenuItem.Checked == false)
+            {
+                enableDisableToolStripMenuItem.Checked = true;
+                string d = DateTime.Now.ToString("yyyy/MM/dd,HH:mm:ss");
+                d = d.Replace("/", "");
+                d = d.Replace(":", "");
+                d = d.Replace(",", "_");
+                logFileName = OutputFolder + "HRS-R8A-V_" + d + ".csv";
+            }
+            else
+            {
+                enableDisableToolStripMenuItem.Checked = false;
+            }
+        }
+        #endregion
+
+
+
+
     }
 }
