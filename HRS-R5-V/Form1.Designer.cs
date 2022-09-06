@@ -34,6 +34,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.button9 = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -161,6 +163,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.checkBox5);
+            this.tabPage1.Controls.Add(this.checkBox4);
             this.tabPage1.Controls.Add(this.checkBox3);
             this.tabPage1.Controls.Add(this.button9);
             this.tabPage1.Controls.Add(this.checkBox2);
@@ -184,10 +188,32 @@
             this.tabPage1.Text = "設定";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Location = new System.Drawing.Point(563, 35);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(66, 16);
+            this.checkBox5.TabIndex = 18;
+            this.checkBox5.Text = "Velocity";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Checked = true;
+            this.checkBox4.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox4.Location = new System.Drawing.Point(563, 13);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(72, 16);
+            this.checkBox4.TabIndex = 17;
+            this.checkBox4.Text = "PositionZ";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            // 
             // checkBox3
             // 
             this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(573, 90);
+            this.checkBox3.Location = new System.Drawing.Point(563, 89);
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.Size = new System.Drawing.Size(71, 16);
             this.checkBox3.TabIndex = 16;
@@ -196,7 +222,7 @@
             // 
             // button9
             // 
-            this.button9.Location = new System.Drawing.Point(504, 14);
+            this.button9.Location = new System.Drawing.Point(479, 13);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(75, 23);
             this.button9.TabIndex = 15;
@@ -207,12 +233,13 @@
             // checkBox2
             // 
             this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(490, 90);
+            this.checkBox2.Location = new System.Drawing.Point(563, 67);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(77, 16);
             this.checkBox2.TabIndex = 14;
             this.checkBox2.Text = "パワー表示";
             this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.Visible = false;
             // 
             // checkBox1
             // 
@@ -228,7 +255,7 @@
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(409, 86);
+            this.button7.Location = new System.Drawing.Point(389, 85);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(75, 23);
             this.button7.TabIndex = 12;
@@ -238,7 +265,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(328, 86);
+            this.button6.Location = new System.Drawing.Point(308, 85);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 11;
@@ -249,7 +276,7 @@
             // button5
             // 
             this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(504, 53);
+            this.button5.Location = new System.Drawing.Point(479, 52);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 10;
@@ -260,7 +287,7 @@
             // button4
             // 
             this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(409, 53);
+            this.button4.Location = new System.Drawing.Point(389, 52);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 9;
@@ -271,7 +298,7 @@
             // button3
             // 
             this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(328, 53);
+            this.button3.Location = new System.Drawing.Point(308, 52);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 8;
@@ -811,9 +838,9 @@
             this.radioButton2.AutoSize = true;
             this.radioButton2.Location = new System.Drawing.Point(16, 40);
             this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(82, 16);
+            this.radioButton2.Size = new System.Drawing.Size(136, 16);
             this.radioButton2.TabIndex = 7;
-            this.radioButton2.Text = "人数カウント";
+            this.radioButton2.Text = "人数カウント (R8A-PT)";
             this.radioButton2.UseVisualStyleBackColor = true;
             // 
             // radioButton1
@@ -822,16 +849,16 @@
             this.radioButton1.Checked = true;
             this.radioButton1.Location = new System.Drawing.Point(16, 18);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(84, 16);
+            this.radioButton1.Size = new System.Drawing.Size(124, 16);
             this.radioButton1.TabIndex = 6;
             this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "バイタル検知";
+            this.radioButton1.Text = "バイタル検知 (R7-V)";
             this.radioButton1.UseVisualStyleBackColor = true;
             this.radioButton1.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(409, 14);
+            this.button2.Location = new System.Drawing.Point(389, 13);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 3;
@@ -841,7 +868,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(328, 14);
+            this.button1.Location = new System.Drawing.Point(308, 13);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -855,7 +882,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(87, 13);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(235, 20);
+            this.comboBox1.Size = new System.Drawing.Size(192, 20);
             this.comboBox1.Sorted = true;
             this.comboBox1.TabIndex = 1;
             // 
@@ -1262,20 +1289,20 @@
             this.outputFolderSetToolStripMenuItem,
             this.enableDisableToolStripMenuItem});
             this.logFileToolStripMenuItem.Name = "logFileToolStripMenuItem";
-            this.logFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logFileToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.logFileToolStripMenuItem.Text = "LogFile";
             // 
             // outputFolderSetToolStripMenuItem
             // 
             this.outputFolderSetToolStripMenuItem.Name = "outputFolderSetToolStripMenuItem";
-            this.outputFolderSetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.outputFolderSetToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.outputFolderSetToolStripMenuItem.Text = "Output Folder Set";
             this.outputFolderSetToolStripMenuItem.Click += new System.EventHandler(this.outputFolderSetToolStripMenuItem_Click);
             // 
             // enableDisableToolStripMenuItem
             // 
             this.enableDisableToolStripMenuItem.Name = "enableDisableToolStripMenuItem";
-            this.enableDisableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.enableDisableToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.enableDisableToolStripMenuItem.Text = "Enable / Disable";
             this.enableDisableToolStripMenuItem.Click += new System.EventHandler(this.enableDisableToolStripMenuItem_Click);
             // 
@@ -1419,6 +1446,8 @@
         private System.Windows.Forms.ToolStripMenuItem logFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem outputFolderSetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem enableDisableToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.CheckBox checkBox4;
     }
 }
 

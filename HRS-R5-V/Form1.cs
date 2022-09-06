@@ -137,13 +137,16 @@ namespace HRS_R5_V
             string[] portlist = GetDeviceNames();
             this.comboBox1.Items.Clear();
             this.comboBox1.Text = "";
-            foreach (string PortName in portlist)
+            if (portlist != null)
             {
-                comboBox1.Items.Add(PortName);
-            }
-            if (comboBox1.Items.Count > 0)
-            {
-                comboBox1.SelectedIndex = 0;
+                foreach (string PortName in portlist)
+                {
+                    comboBox1.Items.Add(PortName);
+                }
+                if (comboBox1.Items.Count > 0)
+                {
+                    comboBox1.SelectedIndex = 0;
+                }
             }
         }
 
@@ -798,6 +801,8 @@ namespace HRS_R5_V
         private void DataPlot_PT()
         {
             string dat = "";
+            string s1, s2;
+
 
             chart1.Series[RName].Points.Clear();
 
@@ -807,7 +812,24 @@ namespace HRS_R5_V
                 if (workx == 0) workx = 0.001;
                 double worky = Convert.ToDouble(VitalData[i].YPos);
                 DataPoint dp = new DataPoint(workx, worky);
-                dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + "\r\nXvel:" + VitalData[i].Xvel + " Yvel:" + VitalData[i].Yvel;
+                s1 = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos;
+                s2 = "\r\nXvel:" + VitalData[i].Xvel + " Yvel:" + VitalData[i].Yvel;
+
+                // Z Position
+                if (checkBox4.Checked == true)
+                {
+                    s1 = s1 + " Z:" + VitalData[i].ZPos;
+                }
+
+                // Velocity
+                if (checkBox5.Checked == true)
+                {
+                    s1 = s1 + s2;
+                }
+
+                dp.Label = s1;
+
+                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos +  "\r\nXvel:" + VitalData[i].Xvel + " Yvel:" + VitalData[i].Yvel;
                 //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
                 //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
 
@@ -823,7 +845,7 @@ namespace HRS_R5_V
                 chart1.Series[RName].Points.Add(dp);
                 chart1.Series[RName].Points[i].MarkerSize = 25;
                 chart1.Series[RName].SmartLabelStyle.CalloutLineColor = Color.White;
-                chart1.Series[RName].Points[i].Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                chart1.Series[RName].Points[i].Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
                 switch (i)
                 {
@@ -1848,11 +1870,12 @@ namespace HRS_R5_V
             if (enableDisableToolStripMenuItem.Checked == false)
             {
                 enableDisableToolStripMenuItem.Checked = true;
-                string d = DateTime.Now.ToString("yyyy/MM/dd,HH:mm:ss");
+                string d = DateTime.Now.ToString("yyyy/MM/dd,HH:mm");
                 d = d.Replace("/", "");
                 d = d.Replace(":", "");
                 d = d.Replace(",", "_");
                 logFileName = OutputFolder + "HRS-R8A-V_" + d + ".csv";
+                logWrite("ID,X,Y,Z,VelX,VelY");
             }
             else
             {
