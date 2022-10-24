@@ -115,7 +115,16 @@ namespace HRS_R5_V
             string rcvMsg = System.Text.Encoding.UTF8.GetString(rcvBytes);
             //rcvMsg = rcvMsg.Replace("\n", "\r\n");
             //BeginInvoke(new Delegate_write(DataTask), new Object[] { rcvMsg });
-            BeginInvoke(new Delegate_write(DataTask_PT), new Object[] { rcvMsg });
+            //            BeginInvoke(new Delegate_write(DataTask_PT), new Object[] { rcvMsg });
+
+            if (radioButton1.Checked == true)
+            {
+                BeginInvoke(new Delegate_write(DataTask), new Object[] { rcvMsg });
+            }
+            else
+            {
+                BeginInvoke(new Delegate_write(DataTask_PT), new Object[] { rcvMsg });
+            }
 
             if (SensorFlg == true)
             {
@@ -663,8 +672,11 @@ namespace HRS_R5_V
 
                 chart1.Series[RName].Points.Add(dp);
 
-                chart1.Series[RName].Points[i].MarkerSize = 25;
-                chart1.Series[RName].Points[i].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                //chart1.Series[RName].Points[i].MarkerSize = 25;
+                //chart1.Series[RName].Points[i].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+
+                chart1.Series[RName].Points[i].MarkerSize = 20;
+                chart1.Series[RName].Points[i].Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
                 switch (i)
                 {
@@ -1391,6 +1403,11 @@ namespace HRS_R5_V
         #region ### Chart Init ###
         private void RadarChart()
         {
+            double x = Convert.ToDouble(textBox2.Text);
+            double y = Convert.ToDouble(textBox3.Text);
+
+            double mez = Convert.ToDouble(textBox4.Text);
+
             chart1.Series.Clear();              // メンバークリア
             chart1.ChartAreas.Clear();          // 描画エリアクリア
             chart1.Legends.Clear();             // 凡例非表示
@@ -1399,7 +1416,7 @@ namespace HRS_R5_V
             chart1.ChartAreas.Add(RName);
 
             chart1.Series[RName].ChartType = SeriesChartType.Point;
-            chart1.Series[RName].MarkerSize = 15;
+            chart1.Series[RName].MarkerSize = 12;
             chart1.Series[RName].MarkerStyle = MarkerStyle.Circle;
 
 
@@ -1415,12 +1432,15 @@ namespace HRS_R5_V
             {
                 chart1.Width = 431;
                 // Y座標
-                chart1.ChartAreas[RName].AxisY.Maximum = 6;
+                //chart1.ChartAreas[RName].AxisY.Maximum = 6;
+                chart1.ChartAreas[RName].AxisY.Maximum = y;
                 chart1.ChartAreas[RName].AxisY.IsReversed = true;           // Y軸 反転表示
 
                 // X座標
-                chart1.ChartAreas[RName].AxisX.Minimum = -4;
-                chart1.ChartAreas[RName].AxisX.Maximum = 4;
+                //chart1.ChartAreas[RName].AxisX.Minimum = -4;
+                //chart1.ChartAreas[RName].AxisX.Maximum = 4;
+                chart1.ChartAreas[RName].AxisX.Minimum = -x;
+                chart1.ChartAreas[RName].AxisX.Maximum = x;
                 chart1.ChartAreas[RName].AxisX.IsReversed = true;
             }
             else
@@ -1444,8 +1464,8 @@ namespace HRS_R5_V
             chart1.ChartAreas[RName].AxisY.Crossing = 0;
 
             // 目盛インタバル値設定
-            chart1.ChartAreas[RName].AxisX.Interval = 1;
-            chart1.ChartAreas[RName].AxisY.Interval = 1;
+            chart1.ChartAreas[RName].AxisX.Interval = mez;
+            chart1.ChartAreas[RName].AxisY.Interval = mez;
 
 
             // Y軸グリッド線表示設定
@@ -1811,7 +1831,7 @@ namespace HRS_R5_V
                 return;
             }
 
-            radioButton2.Checked = true;
+            //radioButton2.Checked = true;
             StartInitTask();
 
             //UdpClientを作成し、ポート番号(4001)にバインドする
