@@ -113,9 +113,6 @@ namespace HRS_R5_V
 
             //データを文字列に変換する
             string rcvMsg = System.Text.Encoding.UTF8.GetString(rcvBytes);
-            //rcvMsg = rcvMsg.Replace("\n", "\r\n");
-            //BeginInvoke(new Delegate_write(DataTask), new Object[] { rcvMsg });
-            //            BeginInvoke(new Delegate_write(DataTask_PT), new Object[] { rcvMsg });
 
             if (radioButton1.Checked == true)
             {
@@ -671,9 +668,6 @@ namespace HRS_R5_V
                 }
 
                 chart1.Series[RName].Points.Add(dp);
-
-                //chart1.Series[RName].Points[i].MarkerSize = 25;
-                //chart1.Series[RName].Points[i].Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 
                 chart1.Series[RName].Points[i].MarkerSize = 20;
                 chart1.Series[RName].Points[i].Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1408,6 +1402,9 @@ namespace HRS_R5_V
 
             double mez = Convert.ToDouble(textBox4.Text);
 
+            int tb2x = tabPage2.Size.Width;
+            int tb2y = tabPage2.Size.Height;
+
             chart1.Series.Clear();              // メンバークリア
             chart1.ChartAreas.Clear();          // 描画エリアクリア
             chart1.Legends.Clear();             // 凡例非表示
@@ -1430,22 +1427,23 @@ namespace HRS_R5_V
 
             if (radioButton1.Checked == true)
             {
-                chart1.Width = 431;
+                //chart1.Width = 431;
+                chart1.Width = tb2x - 220;
+
                 // Y座標
-                //chart1.ChartAreas[RName].AxisY.Maximum = 6;
                 chart1.ChartAreas[RName].AxisY.Maximum = y;
                 chart1.ChartAreas[RName].AxisY.IsReversed = true;           // Y軸 反転表示
 
                 // X座標
-                //chart1.ChartAreas[RName].AxisX.Minimum = -4;
-                //chart1.ChartAreas[RName].AxisX.Maximum = 4;
                 chart1.ChartAreas[RName].AxisX.Minimum = -x;
                 chart1.ChartAreas[RName].AxisX.Maximum = x;
                 chart1.ChartAreas[RName].AxisX.IsReversed = true;
             }
             else
             {
-                chart1.Width = 643;
+                //chart1.Width = 643;
+                chart1.Width = tb2x - 8;
+
                 // Y座標
                 chart1.ChartAreas[RName].AxisY.Maximum = 5;
                 chart1.ChartAreas[RName].AxisY.Minimum = -5;
@@ -1476,7 +1474,6 @@ namespace HRS_R5_V
             chart1.ChartAreas[RName].AxisX.MajorGrid.Enabled = true;
             chart1.ChartAreas[RName].AxisX.MinorGrid.Enabled = false;
 
-            //chart1.ChartAreas[RName].AxisY.IsReversed = true;           // Y軸 反転表示
             chart1.Series[RName].IsXValueIndexed = false;
 
 
@@ -1484,19 +1481,18 @@ namespace HRS_R5_V
             chart1.Series[RName].Font = new Font("Arial", 8);
 
 
-            //chart1.Series[RName].LabelForeColor = Color.White;          // ラベル色
-            chart1.Series[RName].LabelForeColor = Color.Orange;          // ラベル色
+            chart1.Series[RName].LabelForeColor = Color.Orange;                     // ラベル色
 
-            chart1.ChartAreas[RName].AxisX.LineColor = Color.White;     // X軸　ベース色
-            chart1.ChartAreas[RName].AxisX.MajorGrid.LineColor = Color.White;   // X軸色
+            chart1.ChartAreas[RName].AxisX.LineColor = Color.White;                 // X軸　ベース色
+            chart1.ChartAreas[RName].AxisX.MajorGrid.LineColor = Color.White;       // X軸色
 
-            chart1.ChartAreas[RName].AxisY.LineColor = Color.White;     // Y軸　ベース色
-            chart1.ChartAreas[RName].AxisY.MajorGrid.LineColor = Color.White;   // Y軸色
+            chart1.ChartAreas[RName].AxisY.LineColor = Color.White;                 // Y軸　ベース色
+            chart1.ChartAreas[RName].AxisY.MajorGrid.LineColor = Color.White;       // Y軸色
 
             chart1.ChartAreas[RName].AxisX.LabelStyle.ForeColor = Color.White;      // X軸 文字色
             chart1.ChartAreas[RName].AxisY.LabelStyle.ForeColor = Color.White;      // Y軸 文字色
 
-            chart1.ChartAreas[RName].BackColor = Color.Black;           // 背景色
+            chart1.ChartAreas[RName].BackColor = Color.Black;                       // 背景色
         }
         #endregion
 
@@ -1506,6 +1502,7 @@ namespace HRS_R5_V
             SerialDataOut("stop");
             SerialDataOut("stop");
 
+/*
             if (radioButton1.Checked == true)
             {
                 // HRS-R5-V for Exhibition
@@ -1517,7 +1514,7 @@ namespace HRS_R5_V
             {
                 // HRS-R8A-PT
             }
-
+*/
         }
         #endregion
 
@@ -1591,7 +1588,6 @@ namespace HRS_R5_V
             SensorFlg = true;
             RadarParameterInit();               // Radar 初期値設定
 
-            //SerialDataOut("START");
             SerialDataOut("reset");
 
             HumanCount = 0;
@@ -1836,7 +1832,7 @@ namespace HRS_R5_V
 
             //UdpClientを作成し、ポート番号(4001)にバインドする
             System.Net.IPEndPoint localEP = new System.Net.IPEndPoint(
-                System.Net.IPAddress.Any, int.Parse("4001"));
+                System.Net.IPAddress.Any, int.Parse(textBox5.Text));
 
             udpClient = new System.Net.Sockets.UdpClient(localEP);
 
