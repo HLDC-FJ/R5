@@ -47,6 +47,13 @@ namespace HRS_R5_V
 
         public List<VitalItem> VitalData = new List<VitalItem>();
 
+
+
+        public int LogED = 0;
+        public int LogAL = 0;
+
+
+
         public class VitalItem
         {
             public string ID { get; set; }          // ID
@@ -300,9 +307,10 @@ namespace HRS_R5_V
             bool IDcheck = false;
             bool multiLine = false;
 
+            string sbuf = "";
+
             if (SensorFlg == true)
             {
-                //if (work.IndexOf("\n") >= 0)
                 if (work != "")
                 {
                     string[] dat = work.Split('\n');
@@ -310,11 +318,29 @@ namespace HRS_R5_V
 
                     for (int i = 0; i < DatLen; i++)
                     {
+                        if (LogAL == 1)
+                        {
+                            if (LogED == 1)
+                            {
+                                sbuf = dat[i];
+                                logWrite(sbuf);
+                            }
+                        }
+
                         if (dat[i].IndexOf("#Y") >= 0)
                         {
                             det = dat[i].IndexOf("#Y");
                             work = dat[i].Substring(det);
                             string[] param = work.Split(',');
+
+                            if (LogAL == 0)
+                            {
+                                if (LogED == 1)
+                                {
+                                    sbuf = work;
+                                    logWrite(sbuf);
+                                }
+                            }
 
                             DetectCount = Convert.ToInt32(param[0].Substring(2, 1));        // 検出数
 
@@ -522,6 +548,8 @@ namespace HRS_R5_V
         #region 心拍・呼吸 データ表示
         private void DataPlot()
         {
+            string dat = "";
+
             switch (VitalData.Count)
             {
                 case 0:
@@ -586,6 +614,7 @@ namespace HRS_R5_V
                             ID4BR.Text = VitalData[i].BR;
                             break;
                     }
+
                 }
                 else if (Convert.ToInt32(VitalData[i].Status) == 1)
                 {
@@ -835,19 +864,6 @@ namespace HRS_R5_V
 
                 dp.Label = s1;
 
-                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos +  "\r\nXvel:" + VitalData[i].Xvel + " Yvel:" + VitalData[i].Yvel;
-                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:" + VitalData[i].XPos + " Y:" + VitalData[i].YPos + " Z:" + VitalData[i].ZPos;
-                //dp.Label = "ID:" + VitalData[i].ID + "\r\n X:"+VitalData[i].XPos + " Y:"+VitalData[i].YPos;
-
-
-                if (enableDisableToolStripMenuItem.Checked == true)
-                {
-                    dat = "";
-                    dat = VitalData[i].ID + "," + VitalData[i].XPos + "," + VitalData[i].YPos + "," + VitalData[i].ZPos + "," + VitalData[i].Xvel + "," + VitalData[i].Yvel;
-                    logWrite(dat);
-                }
-
-
                 chart1.Series[RName].Points.Add(dp);
                 chart1.Series[RName].Points[i].MarkerSize = 25;
                 chart1.Series[RName].SmartLabelStyle.CalloutLineColor = Color.White;
@@ -904,6 +920,7 @@ namespace HRS_R5_V
             int DatLen;
             bool IDcheck = false;
             bool multiLine = false;
+            string sbuf = "";
 
             try
             {
@@ -919,12 +936,30 @@ namespace HRS_R5_V
 
                         for (int i = 0; i < DatLen; i++)
                         {
+                            if (LogAL == 1)
+                            {
+                                if (LogED == 1)
+                                {
+                                    sbuf = dat[i];
+                                    logWrite(sbuf);
+                                }
+                            }
+
                             if (dat[i].IndexOf("#T") >= 0)
                             {
                                 // "T" データ処理
                                 det = dat[i].IndexOf("#T");
                                 work = dat[i].Substring(det);
                                 string[] param = work.Split(',');
+
+                                if (LogAL == 0)
+                                {
+                                    if (LogED == 1)
+                                    {
+                                        sbuf = work;
+                                        logWrite(sbuf);
+                                    }
+                                }
 
                                 ct = Convert.ToInt32(param[1]);
                                 HumanCount = ct;
@@ -1857,9 +1892,6 @@ namespace HRS_R5_V
         }
         #endregion
 
-
-
-
         #region ログ出力フォルダ設定
         private void outputFolderSetToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1879,29 +1911,44 @@ namespace HRS_R5_V
         }
         #endregion
 
-
         #region ログ出力 有効/無効
         private void enableDisableToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (enableDisableToolStripMenuItem.Checked == false)
             {
                 enableDisableToolStripMenuItem.Checked = true;
+                LogED = 1;
                 string d = DateTime.Now.ToString("yyyy/MM/dd,HH:mm");
                 d = d.Replace("/", "");
                 d = d.Replace(":", "");
                 d = d.Replace(",", "_");
-                logFileName = OutputFolder + "HRS-R8A-V_" + d + ".csv";
-                logWrite("ID,X,Y,Z,VelX,VelY");
+                logFileName = OutputFolder + "HRS_" + d + ".csv";
+                logWrite("");
+                //logWrite("ID,X,Y,Z,VelX,VelY");
             }
             else
             {
                 enableDisableToolStripMenuItem.Checked = false;
+                LogED = 0;
             }
         }
+
+
+
         #endregion
 
-
-
-
+        private void singleALLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (singleALLToolStripMenuItem.Checked == false)
+            {
+                singleALLToolStripMenuItem.Checked = true;
+                LogAL = 1;
+            }
+            else
+            {
+                singleALLToolStripMenuItem.Checked = false;
+                LogAL = 0;
+            }
+        }
     }
 }

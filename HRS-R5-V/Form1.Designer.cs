@@ -125,6 +125,7 @@
             this.label_HR_A = new System.Windows.Forms.Label();
             this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -140,7 +141,7 @@
             this.logFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.outputFolderSetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enableDisableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.singleALLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -1252,6 +1253,14 @@
             this.tabPage3.Text = "Setting";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(40, 169);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(100, 19);
+            this.textBox5.TabIndex = 6;
+            this.textBox5.Text = "4001";
+            // 
             // textBox4
             // 
             this.textBox4.Location = new System.Drawing.Point(40, 133);
@@ -1366,32 +1375,32 @@
             // 
             this.logFileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.outputFolderSetToolStripMenuItem,
-            this.enableDisableToolStripMenuItem});
+            this.enableDisableToolStripMenuItem,
+            this.singleALLToolStripMenuItem});
             this.logFileToolStripMenuItem.Name = "logFileToolStripMenuItem";
-            this.logFileToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.logFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.logFileToolStripMenuItem.Text = "LogFile";
             // 
             // outputFolderSetToolStripMenuItem
             // 
             this.outputFolderSetToolStripMenuItem.Name = "outputFolderSetToolStripMenuItem";
-            this.outputFolderSetToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.outputFolderSetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.outputFolderSetToolStripMenuItem.Text = "Output Folder Set";
             this.outputFolderSetToolStripMenuItem.Click += new System.EventHandler(this.outputFolderSetToolStripMenuItem_Click);
             // 
             // enableDisableToolStripMenuItem
             // 
             this.enableDisableToolStripMenuItem.Name = "enableDisableToolStripMenuItem";
-            this.enableDisableToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+            this.enableDisableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.enableDisableToolStripMenuItem.Text = "Enable / Disable";
             this.enableDisableToolStripMenuItem.Click += new System.EventHandler(this.enableDisableToolStripMenuItem_Click);
             // 
-            // textBox5
+            // singleALLToolStripMenuItem
             // 
-            this.textBox5.Location = new System.Drawing.Point(40, 169);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(100, 19);
-            this.textBox5.TabIndex = 6;
-            this.textBox5.Text = "4005";
+            this.singleALLToolStripMenuItem.Name = "singleALLToolStripMenuItem";
+            this.singleALLToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.singleALLToolStripMenuItem.Text = "Single / ALL";
+            this.singleALLToolStripMenuItem.Click += new System.EventHandler(this.singleALLToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -1545,6 +1554,7 @@
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox5;
+        private System.Windows.Forms.ToolStripMenuItem singleALLToolStripMenuItem;
     }
 }
 
