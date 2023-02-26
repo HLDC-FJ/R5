@@ -212,8 +212,6 @@
             // checkBox4
             // 
             this.checkBox4.AutoSize = true;
-            this.checkBox4.Checked = true;
-            this.checkBox4.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBox4.Location = new System.Drawing.Point(563, 13);
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(72, 16);
@@ -1378,27 +1376,27 @@
             this.enableDisableToolStripMenuItem,
             this.singleALLToolStripMenuItem});
             this.logFileToolStripMenuItem.Name = "logFileToolStripMenuItem";
-            this.logFileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.logFileToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.logFileToolStripMenuItem.Text = "LogFile";
             // 
             // outputFolderSetToolStripMenuItem
             // 
             this.outputFolderSetToolStripMenuItem.Name = "outputFolderSetToolStripMenuItem";
-            this.outputFolderSetToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.outputFolderSetToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.outputFolderSetToolStripMenuItem.Text = "Output Folder Set";
             this.outputFolderSetToolStripMenuItem.Click += new System.EventHandler(this.outputFolderSetToolStripMenuItem_Click);
             // 
             // enableDisableToolStripMenuItem
             // 
             this.enableDisableToolStripMenuItem.Name = "enableDisableToolStripMenuItem";
-            this.enableDisableToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.enableDisableToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.enableDisableToolStripMenuItem.Text = "Enable / Disable";
             this.enableDisableToolStripMenuItem.Click += new System.EventHandler(this.enableDisableToolStripMenuItem_Click);
             // 
             // singleALLToolStripMenuItem
             // 
             this.singleALLToolStripMenuItem.Name = "singleALLToolStripMenuItem";
-            this.singleALLToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.singleALLToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
             this.singleALLToolStripMenuItem.Text = "Single / ALL";
             this.singleALLToolStripMenuItem.Click += new System.EventHandler(this.singleALLToolStripMenuItem_Click);
             // 
