@@ -142,6 +142,17 @@
             this.outputFolderSetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.enableDisableToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.singleALLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ID4TP = new System.Windows.Forms.Label();
+            this.label_TP_D = new System.Windows.Forms.Label();
+            this.ID3TP = new System.Windows.Forms.Label();
+            this.label_TP_C = new System.Windows.Forms.Label();
+            this.ID2TP = new System.Windows.Forms.Label();
+            this.label_TP_B = new System.Windows.Forms.Label();
+            this.ID1TP = new System.Windows.Forms.Label();
+            this.label_TP_A = new System.Windows.Forms.Label();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -174,6 +185,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.checkBox6);
             this.tabPage1.Controls.Add(this.checkBox5);
             this.tabPage1.Controls.Add(this.checkBox4);
             this.tabPage1.Controls.Add(this.checkBox3);
@@ -951,14 +963,16 @@
             // 
             this.IDgroup4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.IDgroup4.BackColor = System.Drawing.Color.Yellow;
+            this.IDgroup4.Controls.Add(this.ID4TP);
+            this.IDgroup4.Controls.Add(this.label_TP_D);
             this.IDgroup4.Controls.Add(this.ID4BR);
             this.IDgroup4.Controls.Add(this.ID4HR);
             this.IDgroup4.Controls.Add(this.label13);
             this.IDgroup4.Controls.Add(this.label14);
             this.IDgroup4.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.IDgroup4.Location = new System.Drawing.Point(439, 252);
+            this.IDgroup4.Location = new System.Drawing.Point(439, 322);
             this.IDgroup4.Name = "IDgroup4";
-            this.IDgroup4.Size = new System.Drawing.Size(204, 76);
+            this.IDgroup4.Size = new System.Drawing.Size(204, 94);
             this.IDgroup4.TabIndex = 4;
             this.IDgroup4.TabStop = false;
             this.IDgroup4.Text = "ID:A";
@@ -969,7 +983,7 @@
             this.ID4BR.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ID4BR.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ID4BR.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.ID4BR.Location = new System.Drawing.Point(120, 45);
+            this.ID4BR.Location = new System.Drawing.Point(120, 39);
             this.ID4BR.Name = "ID4BR";
             this.ID4BR.Size = new System.Drawing.Size(79, 23);
             this.ID4BR.TabIndex = 3;
@@ -993,7 +1007,7 @@
             this.label13.BackColor = System.Drawing.Color.WhiteSmoke;
             this.label13.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label13.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label13.Location = new System.Drawing.Point(37, 46);
+            this.label13.Location = new System.Drawing.Point(37, 40);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(77, 23);
             this.label13.TabIndex = 1;
@@ -1016,14 +1030,16 @@
             // 
             this.IDgroup3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.IDgroup3.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.IDgroup3.Controls.Add(this.ID3TP);
+            this.IDgroup3.Controls.Add(this.label_TP_C);
             this.IDgroup3.Controls.Add(this.ID3BR);
             this.IDgroup3.Controls.Add(this.ID3HR);
             this.IDgroup3.Controls.Add(this.label9);
             this.IDgroup3.Controls.Add(this.label10);
             this.IDgroup3.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.IDgroup3.Location = new System.Drawing.Point(439, 170);
+            this.IDgroup3.Location = new System.Drawing.Point(439, 220);
             this.IDgroup3.Name = "IDgroup3";
-            this.IDgroup3.Size = new System.Drawing.Size(204, 76);
+            this.IDgroup3.Size = new System.Drawing.Size(204, 96);
             this.IDgroup3.TabIndex = 4;
             this.IDgroup3.TabStop = false;
             this.IDgroup3.Text = "ID:A";
@@ -1034,7 +1050,7 @@
             this.ID3BR.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ID3BR.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ID3BR.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.ID3BR.Location = new System.Drawing.Point(120, 45);
+            this.ID3BR.Location = new System.Drawing.Point(120, 39);
             this.ID3BR.Name = "ID3BR";
             this.ID3BR.Size = new System.Drawing.Size(79, 23);
             this.ID3BR.TabIndex = 3;
@@ -1058,7 +1074,7 @@
             this.label9.BackColor = System.Drawing.Color.WhiteSmoke;
             this.label9.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label9.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label9.Location = new System.Drawing.Point(37, 46);
+            this.label9.Location = new System.Drawing.Point(37, 40);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(77, 23);
             this.label9.TabIndex = 1;
@@ -1081,14 +1097,16 @@
             // 
             this.IDgroup2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.IDgroup2.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.IDgroup2.Controls.Add(this.ID2TP);
+            this.IDgroup2.Controls.Add(this.label_TP_B);
             this.IDgroup2.Controls.Add(this.ID2BR);
             this.IDgroup2.Controls.Add(this.ID2HR);
             this.IDgroup2.Controls.Add(this.label5);
             this.IDgroup2.Controls.Add(this.label6);
             this.IDgroup2.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.IDgroup2.Location = new System.Drawing.Point(439, 88);
+            this.IDgroup2.Location = new System.Drawing.Point(439, 116);
             this.IDgroup2.Name = "IDgroup2";
-            this.IDgroup2.Size = new System.Drawing.Size(204, 76);
+            this.IDgroup2.Size = new System.Drawing.Size(204, 98);
             this.IDgroup2.TabIndex = 4;
             this.IDgroup2.TabStop = false;
             this.IDgroup2.Text = "ID:A";
@@ -1099,7 +1117,7 @@
             this.ID2BR.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ID2BR.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ID2BR.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.ID2BR.Location = new System.Drawing.Point(121, 45);
+            this.ID2BR.Location = new System.Drawing.Point(121, 40);
             this.ID2BR.Name = "ID2BR";
             this.ID2BR.Size = new System.Drawing.Size(79, 23);
             this.ID2BR.TabIndex = 3;
@@ -1123,7 +1141,7 @@
             this.label5.BackColor = System.Drawing.Color.WhiteSmoke;
             this.label5.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label5.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label5.Location = new System.Drawing.Point(38, 46);
+            this.label5.Location = new System.Drawing.Point(38, 41);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(77, 23);
             this.label5.TabIndex = 1;
@@ -1146,6 +1164,8 @@
             // 
             this.IDgroup1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.IDgroup1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.IDgroup1.Controls.Add(this.ID1TP);
+            this.IDgroup1.Controls.Add(this.label_TP_A);
             this.IDgroup1.Controls.Add(this.ID1BR);
             this.IDgroup1.Controls.Add(this.ID1HR);
             this.IDgroup1.Controls.Add(this.label_BR_A);
@@ -1153,7 +1173,7 @@
             this.IDgroup1.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.IDgroup1.Location = new System.Drawing.Point(440, 6);
             this.IDgroup1.Name = "IDgroup1";
-            this.IDgroup1.Size = new System.Drawing.Size(204, 76);
+            this.IDgroup1.Size = new System.Drawing.Size(204, 104);
             this.IDgroup1.TabIndex = 1;
             this.IDgroup1.TabStop = false;
             this.IDgroup1.Text = "ID:A";
@@ -1164,7 +1184,7 @@
             this.ID1BR.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ID1BR.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ID1BR.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.ID1BR.Location = new System.Drawing.Point(119, 45);
+            this.ID1BR.Location = new System.Drawing.Point(119, 43);
             this.ID1BR.Name = "ID1BR";
             this.ID1BR.Size = new System.Drawing.Size(80, 23);
             this.ID1BR.TabIndex = 3;
@@ -1188,7 +1208,7 @@
             this.label_BR_A.BackColor = System.Drawing.Color.WhiteSmoke;
             this.label_BR_A.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.label_BR_A.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label_BR_A.Location = new System.Drawing.Point(37, 46);
+            this.label_BR_A.Location = new System.Drawing.Point(37, 44);
             this.label_BR_A.Name = "label_BR_A";
             this.label_BR_A.Size = new System.Drawing.Size(76, 23);
             this.label_BR_A.TabIndex = 1;
@@ -1237,6 +1257,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label7);
+            this.tabPage3.Controls.Add(this.textBox6);
             this.tabPage3.Controls.Add(this.textBox5);
             this.tabPage3.Controls.Add(this.textBox4);
             this.tabPage3.Controls.Add(this.label4);
@@ -1400,6 +1422,138 @@
             this.singleALLToolStripMenuItem.Text = "Single / ALL";
             this.singleALLToolStripMenuItem.Click += new System.EventHandler(this.singleALLToolStripMenuItem_Click);
             // 
+            // ID4TP
+            // 
+            this.ID4TP.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ID4TP.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.ID4TP.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.ID4TP.Location = new System.Drawing.Point(120, 63);
+            this.ID4TP.Name = "ID4TP";
+            this.ID4TP.Size = new System.Drawing.Size(79, 23);
+            this.ID4TP.TabIndex = 5;
+            this.ID4TP.Text = "label7";
+            this.ID4TP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ID4TP.Visible = false;
+            // 
+            // label_TP_D
+            // 
+            this.label_TP_D.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.label_TP_D.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label_TP_D.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_TP_D.Location = new System.Drawing.Point(37, 64);
+            this.label_TP_D.Name = "label_TP_D";
+            this.label_TP_D.Size = new System.Drawing.Size(77, 23);
+            this.label_TP_D.TabIndex = 4;
+            this.label_TP_D.Text = "体温";
+            this.label_TP_D.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label_TP_D.Visible = false;
+            // 
+            // ID3TP
+            // 
+            this.ID3TP.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ID3TP.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.ID3TP.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.ID3TP.Location = new System.Drawing.Point(120, 63);
+            this.ID3TP.Name = "ID3TP";
+            this.ID3TP.Size = new System.Drawing.Size(79, 23);
+            this.ID3TP.TabIndex = 5;
+            this.ID3TP.Text = "label11";
+            this.ID3TP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ID3TP.Visible = false;
+            // 
+            // label_TP_C
+            // 
+            this.label_TP_C.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.label_TP_C.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label_TP_C.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_TP_C.Location = new System.Drawing.Point(37, 64);
+            this.label_TP_C.Name = "label_TP_C";
+            this.label_TP_C.Size = new System.Drawing.Size(77, 23);
+            this.label_TP_C.TabIndex = 4;
+            this.label_TP_C.Text = "体温";
+            this.label_TP_C.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label_TP_C.Visible = false;
+            // 
+            // ID2TP
+            // 
+            this.ID2TP.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ID2TP.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.ID2TP.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.ID2TP.Location = new System.Drawing.Point(121, 65);
+            this.ID2TP.Name = "ID2TP";
+            this.ID2TP.Size = new System.Drawing.Size(79, 23);
+            this.ID2TP.TabIndex = 5;
+            this.ID2TP.Text = "label3";
+            this.ID2TP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ID2TP.Visible = false;
+            // 
+            // label_TP_B
+            // 
+            this.label_TP_B.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.label_TP_B.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label_TP_B.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_TP_B.Location = new System.Drawing.Point(38, 66);
+            this.label_TP_B.Name = "label_TP_B";
+            this.label_TP_B.Size = new System.Drawing.Size(77, 23);
+            this.label_TP_B.TabIndex = 4;
+            this.label_TP_B.Text = "体温";
+            this.label_TP_B.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label_TP_B.Visible = false;
+            // 
+            // ID1TP
+            // 
+            this.ID1TP.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ID1TP.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.ID1TP.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.ID1TP.Location = new System.Drawing.Point(119, 68);
+            this.ID1TP.Name = "ID1TP";
+            this.ID1TP.Size = new System.Drawing.Size(80, 23);
+            this.ID1TP.TabIndex = 5;
+            this.ID1TP.Text = "label2";
+            this.ID1TP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.ID1TP.Visible = false;
+            // 
+            // label_TP_A
+            // 
+            this.label_TP_A.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.label_TP_A.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.label_TP_A.Font = new System.Drawing.Font("MS UI Gothic", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label_TP_A.Location = new System.Drawing.Point(37, 69);
+            this.label_TP_A.Name = "label_TP_A";
+            this.label_TP_A.Size = new System.Drawing.Size(76, 23);
+            this.label_TP_A.TabIndex = 4;
+            this.label_TP_A.Text = "体温";
+            this.label_TP_A.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label_TP_A.Visible = false;
+            // 
+            // checkBox6
+            // 
+            this.checkBox6.AutoSize = true;
+            this.checkBox6.Location = new System.Drawing.Point(479, 89);
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.Size = new System.Drawing.Size(48, 16);
+            this.checkBox6.TabIndex = 19;
+            this.checkBox6.Text = "体温";
+            this.checkBox6.UseVisualStyleBackColor = true;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(256, 18);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(100, 19);
+            this.textBox6.TabIndex = 7;
+            this.textBox6.Text = "15";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("MS UI Gothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label7.Location = new System.Drawing.Point(165, 18);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(85, 19);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "心拍補正";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -1553,6 +1707,17 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.ToolStripMenuItem singleALLToolStripMenuItem;
+        private System.Windows.Forms.Label ID4TP;
+        private System.Windows.Forms.Label label_TP_D;
+        private System.Windows.Forms.Label ID3TP;
+        private System.Windows.Forms.Label label_TP_C;
+        private System.Windows.Forms.Label ID2TP;
+        private System.Windows.Forms.Label label_TP_B;
+        private System.Windows.Forms.Label ID1TP;
+        private System.Windows.Forms.Label label_TP_A;
+        private System.Windows.Forms.CheckBox checkBox6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox textBox6;
     }
 }
 

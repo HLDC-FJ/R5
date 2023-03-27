@@ -296,6 +296,19 @@ namespace HRS_R5_V
         }
         #endregion
 
+        private string VtoTemp(double vr)
+        {
+            string dat = "";
+            double vv = 0;
+
+            if (vr > 40)
+            {
+                vv = (vr + 579.5) / 18;
+                dat = vv.ToString("0.00");
+            }
+
+            return dat;
+        }
 
 
         #region 受信データ処理 [HRS-R5-V]
@@ -549,6 +562,9 @@ namespace HRS_R5_V
         private void DataPlot()
         {
             string dat = "";
+            double vh = Convert.ToInt32(textBox6.Text);
+            double vv = 0;
+            string hr = "";
 
             switch (VitalData.Count)
             {
@@ -595,23 +611,76 @@ namespace HRS_R5_V
                     {
                         case 0:
                             IDgroup1.Text = "ID:" + VitalData[i].ID;
-                            ID1HR.Text = VitalData[i].HR;
+                            hr = "";
+                            vv = Convert.ToDouble(VitalData[i].HR);
+                            if (vv >= 40)
+                            {
+                                vv = vv - vh;
+                                hr = vv.ToString();
+                            }
+
+                            ID1HR.Text = hr;
                             ID1BR.Text = VitalData[i].BR;
+
+                            if (checkBox6.Checked == true)
+                            {
+                                ID1TP.Text = VtoTemp(vv);
+                            }
                             break;
                         case 1:
                             IDgroup2.Text = "ID:" + VitalData[i].ID;
-                            ID2HR.Text = VitalData[i].HR;
+                            vv = Convert.ToDouble(VitalData[i].HR);
+                            hr = "";
+                            if (vv >= 40) {
+                                vv = vv - vh;
+                                hr = vv.ToString();
+                            }
+
+                            ID2HR.Text = hr;
                             ID2BR.Text = VitalData[i].BR;
+
+                            if (checkBox6.Checked == true)
+                            {
+                                ID2TP.Text = VtoTemp(vv);
+                            }
                             break;
                         case 2:
                             IDgroup3.Text = "ID:" + VitalData[i].ID;
-                            ID3HR.Text = VitalData[i].HR;
+
+                            hr = "";
+                            vv = Convert.ToDouble(VitalData[i].HR);
+                            if (vv >= 40)
+                            {
+                                vv = vv - vh;
+                                hr = vv.ToString();
+                            }
+
+                            ID3HR.Text = hr;
                             ID3BR.Text = VitalData[i].BR;
+
+                            if (checkBox6.Checked == true)
+                            {
+                                ID3TP.Text = VtoTemp(vv);
+                            }
                             break;
                         case 3:
                             IDgroup4.Text = "ID:" + VitalData[i].ID;
-                            ID4HR.Text = VitalData[i].HR;
+
+                            hr = "";
+                            vv = Convert.ToDouble(VitalData[i].HR);
+                            if (vv >= 40)
+                            {
+                                vv = vv - vh;
+                                hr = vv.ToString();
+                            }
+
+                            ID4HR.Text = hr;
                             ID4BR.Text = VitalData[i].BR;
+
+                            if (checkBox6.Checked == true)
+                            {
+                                ID4TP.Text = VtoTemp(vv);
+                            }
                             break;
                     }
 
@@ -624,21 +693,25 @@ namespace HRS_R5_V
                             IDgroup1.Text = "ID:" + VitalData[i].ID;
                             ID1HR.Text = "Moving";
                             ID1BR.Text = "";
+                            ID1TP.Text = "";
                             break;
                         case 1:
                             IDgroup2.Text = "ID:" + VitalData[i].ID;
                             ID2HR.Text = "Moving";
                             ID2BR.Text = "";
+                            ID2TP.Text = "";
                             break;
                         case 2:
                             IDgroup3.Text = "ID:" + VitalData[i].ID;
                             ID3HR.Text = "Moving";
                             ID3BR.Text = "";
+                            ID3TP.Text = "";
                             break;
                         case 3:
                             IDgroup4.Text = "ID:" + VitalData[i].ID;
                             ID4HR.Text = "Moving";
                             ID4BR.Text = "";
+                            ID4TP.Text = "";
                             break;
                     }
                 }
@@ -650,21 +723,25 @@ namespace HRS_R5_V
                             IDgroup1.Text = "ID:" + VitalData[i].ID;
                             ID1HR.Text = "Ready";
                             ID1BR.Text = "";
+                            ID1TP.Text = "";
                             break;
                         case 1:
                             IDgroup2.Text = "ID:" + VitalData[i].ID;
                             ID2HR.Text = "Ready";
                             ID2BR.Text = "";
+                            ID2TP.Text = "";
                             break;
                         case 2:
                             IDgroup3.Text = "ID:" + VitalData[i].ID;
                             ID3HR.Text = "Ready";
                             ID3BR.Text = "";
+                            ID3TP.Text = "";
                             break;
                         case 3:
                             IDgroup4.Text = "ID:" + VitalData[i].ID;
                             ID4HR.Text = "Ready";
                             ID4BR.Text = "";
+                            ID4TP.Text = "";
                             break;
                     }
                 }
@@ -1473,6 +1550,29 @@ namespace HRS_R5_V
                 chart1.ChartAreas[RName].AxisX.Minimum = -x;
                 chart1.ChartAreas[RName].AxisX.Maximum = x;
                 chart1.ChartAreas[RName].AxisX.IsReversed = true;
+
+                if (checkBox6.Checked == true)
+                {
+                    // 体温表示
+                    label_TP_A.Visible = true;
+                    label_TP_B.Visible = true;
+                    label_TP_C.Visible = true;
+                    label_TP_D.Visible = true;
+                    ID1TP.Visible = true;
+                    ID2TP.Visible = true;
+                    ID3TP.Visible = true;
+                    ID4TP.Visible = true;
+                } else
+                {
+                    label_TP_A.Visible = false;
+                    label_TP_B.Visible = false;
+                    label_TP_C.Visible = false;
+                    label_TP_D.Visible = false;
+                    ID1TP.Visible = false;
+                    ID2TP.Visible = false;
+                    ID3TP.Visible = false;
+                    ID4TP.Visible = false;
+                }
             }
             else
             {
